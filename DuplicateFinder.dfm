@@ -1,8 +1,8 @@
 object MainForm: TMainForm
   Left = 260
   Top = 140
-  Width = 870
-  Height = 789
+  Width = 677
+  Height = 713
   Caption = #1055#1086#1080#1089#1082' '#1076#1091#1073#1083#1080#1082#1072#1090#1086#1074' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -190,8 +190,8 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 96
-    Top = 12
+    Left = 3
+    Top = -2
     Width = 152
     Height = 24
     Caption = #1055#1054#1048#1057#1050' '#1060#1040#1049#1051#1054#1042
@@ -203,21 +203,21 @@ object MainForm: TMainForm
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 96
-    Top = 327
-    Width = 164
-    Height = 24
+    Left = -1
+    Top = 313
+    Width = 159
+    Height = 20
     Caption = #1052#1072#1089#1082#1072' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072':'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -19
+    Font.Height = -16
     Font.Name = 'MS Sans Serif'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 96
-    Top = 48
+    Left = 3
+    Top = 34
     Width = 48
     Height = 24
     Caption = #1055#1091#1090#1100':'
@@ -242,8 +242,8 @@ object MainForm: TMainForm
     ParentFont = False
   end
   object BtnStartFind: TBitBtn
-    Left = 94
-    Top = 363
+    Left = 1
+    Top = 349
     Width = 147
     Height = 46
     Caption = #1053#1072#1095#1072#1090#1100' '#1055#1086#1080#1089#1082
@@ -356,8 +356,8 @@ object MainForm: TMainForm
       C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0}
   end
   object BtnStopFind: TBitBtn
-    Left = 430
-    Top = 363
+    Left = 337
+    Top = 349
     Width = 147
     Height = 46
     Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1055#1086#1080#1089#1082
@@ -471,8 +471,8 @@ object MainForm: TMainForm
       FEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFEFE}
   end
   object BtnPlayPause: TBitBtn
-    Left = 598
-    Top = 363
+    Left = 505
+    Top = 349
     Width = 147
     Height = 46
     Caption = #1055#1088#1080#1086#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -487,9 +487,9 @@ object MainForm: TMainForm
     OnClick = BtnPlayPauseClick
   end
   object EdtFindMask: TEdit
-    Left = 263
-    Top = 319
-    Width = 163
+    Left = 152
+    Top = 305
+    Width = 193
     Height = 32
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -501,8 +501,8 @@ object MainForm: TMainForm
     Text = '*.*'
   end
   object DirectoryListBox1: TDirectoryListBox
-    Left = 96
-    Top = 104
+    Left = 3
+    Top = 90
     Width = 145
     Height = 209
     FileList = FileListBox1
@@ -511,17 +511,17 @@ object MainForm: TMainForm
     OnChange = DirectoryListBox1Change
   end
   object FileListBox1: TFileListBox
-    Left = 263
-    Top = 80
-    Width = 163
+    Left = 152
+    Top = 66
+    Width = 193
     Height = 233
     FileType = [ftHidden, ftSystem, ftNormal]
     ItemHeight = 13
     TabOrder = 5
   end
   object DriveComboBox1: TDriveComboBox
-    Left = 96
-    Top = 80
+    Left = 3
+    Top = 66
     Width = 145
     Height = 19
     DirList = DirectoryListBox1
@@ -529,13 +529,13 @@ object MainForm: TMainForm
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 709
-    Width = 854
+    Top = 633
+    Width = 661
     Height = 22
     Panels = <
       item
         Text = #1058#1077#1082#1091#1097#1072#1103' '#1087#1072#1087#1082#1072
-        Width = 650
+        Width = 550
       end
       item
         Text = '0'
@@ -546,23 +546,12 @@ object MainForm: TMainForm
         Width = 80
       end>
   end
-  object mmo1: TMemo
-    Left = 8
-    Top = 440
-    Width = 833
-    Height = 111
-    Lines.Strings = (
-      '')
-    ScrollBars = ssBoth
-    TabOrder = 8
-    Visible = False
-  end
   object grp1: TGroupBox
-    Left = 440
-    Top = 76
-    Width = 233
-    Height = 269
-    TabOrder = 9
+    Left = 347
+    Top = 62
+    Width = 302
+    Height = 275
+    TabOrder = 8
     object ChkBoxHeader: TCheckBox
       Left = 8
       Top = 16
@@ -579,28 +568,28 @@ object MainForm: TMainForm
       TabOrder = 0
     end
   end
-  object mmo2: TMemo
+  object MmoDuplicateRezult: TMemo
     Left = 8
-    Top = 559
-    Width = 833
+    Top = 463
+    Width = 649
     Height = 97
     Lines.Strings = (
       '')
     ScrollBars = ssBoth
-    TabOrder = 10
+    TabOrder = 9
   end
   object ProgressBar: TProgressBar
     Left = 8
-    Top = 672
-    Width = 833
+    Top = 576
+    Width = 649
     Height = 33
     BorderWidth = 2
-    TabOrder = 11
+    TabOrder = 10
     Visible = False
   end
   object BtnExit: TBitBtn
-    Left = 264
-    Top = 363
+    Left = 171
+    Top = 349
     Width = 147
     Height = 46
     Caption = #1042#1099#1093#1086#1076
@@ -610,7 +599,7 @@ object MainForm: TMainForm
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 12
+    TabOrder = 11
     OnClick = BtnExitClick
     Glyph.Data = {
       360C0000424D360C000000000000360000002800000020000000200000000100
@@ -715,10 +704,10 @@ object MainForm: TMainForm
     Spacing = 17
   end
   object ChkLstBoxFileAttribute: TCheckListBox
-    Left = 464
-    Top = 124
-    Width = 177
-    Height = 93
+    Left = 371
+    Top = 110
+    Width = 262
+    Height = 43
     Enabled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -728,16 +717,13 @@ object MainForm: TMainForm
     ItemHeight = 16
     Items.Strings = (
       #1055#1086' '#1080#1084#1077#1085#1080
-      #1058#1086#1083#1100#1082#1086' '#1095#1090#1077#1085#1080#1077
-      #1057#1082#1088#1099#1090#1099#1081
-      #1057#1080#1089#1090#1077#1084#1085#1099#1081
-      #1040#1088#1093#1080#1074#1085#1099#1081)
+      #1055#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1084#1091)
     ParentFont = False
-    TabOrder = 13
+    TabOrder = 12
   end
   object MainMenu: TMainMenu
-    Left = 16
-    Top = 13
+    Left = 224
+    Top = 5
     object MniMenu: TMenuItem
       Caption = #1052#1077#1085#1102
       ImageIndex = 5
@@ -851,21 +837,9 @@ object MainForm: TMainForm
           Caption = #1055#1086' '#1080#1084#1077#1085#1080
           OnClick = MniDuplicateOnNameClick
         end
-        object MniDuplicateReadOnly: TMenuItem
-          Caption = #1058#1086#1083#1100#1082#1086' '#1095#1090#1077#1085#1080#1077
-          OnClick = MniDuplicateReadOnlyClick
-        end
-        object MniDuplicateHidden: TMenuItem
-          Caption = #1057#1082#1088#1099#1090#1099#1081
-          OnClick = MniDuplicateHiddenClick
-        end
-        object MniDuplicateSystem: TMenuItem
-          Caption = #1057#1080#1089#1090#1077#1084#1085#1099#1081
-          OnClick = MniDuplicateSystemClick
-        end
-        object MniDuplicateArchive: TMenuItem
-          Caption = #1040#1088#1093#1080#1074#1085#1099#1081
-          OnClick = MniDuplicateArchiveClick
+        object MniDuplicateByContent: TMenuItem
+          Caption = #1055#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1084#1091
+          OnClick = MniDuplicateByContentClick
         end
         object MniSeparator1: TMenuItem
           Caption = '-'

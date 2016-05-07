@@ -30,9 +30,8 @@ type
     DriveComboBox1: TDriveComboBox;
     Label4: TLabel;
     stat1: TStatusBar;
-    mmo1: TMemo;
     ChkBoxHeader: TCheckBox;
-    mmo2: TMemo;
+    MmoDuplicateRezult: TMemo;
     ProgressBar: TProgressBar;
     grp1:TGroupBox;
     BtnExit: TBitBtn;
@@ -47,10 +46,7 @@ type
     MniPlayPause: TMenuItem;
     MniExit: TMenuItem;
     MniDuplicateOnName: TMenuItem;
-    MniDuplicateReadOnly: TMenuItem;
-    MniDuplicateHidden: TMenuItem;
-    MniDuplicateSystem: TMenuItem;
-    MniDuplicateArchive: TMenuItem;
+    MniDuplicateByContent: TMenuItem;
     MniSeparator2: TMenuItem;
     MniDuplicateSelectAll: TMenuItem;
     MniSeparator1: TMenuItem;
@@ -67,10 +63,7 @@ type
     procedure MniStartFindClick(Sender: TObject);
     procedure MniDuplicateOnNameClick(Sender: TObject);
     procedure MniDuplicateSelectAllClick(Sender: TObject);
-    procedure MniDuplicateReadOnlyClick(Sender: TObject);
-    procedure MniDuplicateHiddenClick(Sender: TObject);
-    procedure MniDuplicateSystemClick(Sender: TObject);
-    procedure MniDuplicateArchiveClick(Sender: TObject);
+    procedure MniDuplicateByContentClick(Sender: TObject);
     procedure MniStopFindClick(Sender: TObject);
     procedure MniPlayPauseClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -80,7 +73,7 @@ type
     { Private declarations }
     FCurDir: string;
     FPictureGlyph: TBitmap;
-    function test_check(Aobject: TCheckListBox; ACheck: Boolean): Boolean ;
+    procedure MenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; NumItem: Integer);
   public
     { Public declarations }
   end;
@@ -95,8 +88,8 @@ implementation
 
 procedure TMainForm.BtnStartFindClick(Sender: TObject);
 begin
-  mmo1.Lines.Clear;
-  mmo2.Lines.Clear;
+
+  MmoDuplicateRezult.Lines.Clear;
   ProgressBar.Position := 0;
   FindThread:=ThreadFinder.Create;
   BtnStartFind.Enabled := False;
@@ -189,23 +182,12 @@ end;
 
 procedure TMainForm.MniDuplicateOnNameClick(Sender: TObject);
 begin
-  if MniDuplicateOnName.Checked then
-  begin
-    MniDuplicateOnName.Checked := False;
-    ChkLstBoxFileAttribute.Checked[0] := False;
-      if ((ChkLstBoxFileAttribute.Checked[1] = False)
-        and(ChkLstBoxFileAttribute.Checked[2] = False)
-        and(ChkLstBoxFileAttribute.Checked[3] = False)
-        and(ChkLstBoxFileAttribute.Checked[4] = False))
-      then
-         ChkBoxHeader.Checked := False;
-  end
-  else
-  begin
-    MniDuplicateOnName.Checked := True;
-    ChkLstBoxFileAttribute.Checked[0] := True;
-    ChkBoxHeader.Checked := True;
-  end;
+  MenuItmChkLstCheckUnchek(MniDuplicateOnName,ChkLstBoxFileAttribute,0 );
+end;
+
+procedure TMainForm.MniDuplicateByContentClick(Sender: TObject);
+begin
+  MenuItmChkLstCheckUnchek(MniDuplicateByContent,ChkLstBoxFileAttribute,1);
 end;
 
 procedure TMainForm.MniDuplicateSelectAllClick(Sender: TObject);
@@ -214,117 +196,21 @@ begin
   begin
     MniDuplicateSelectAll.Checked := False;
     MniDuplicateOnName.Checked := False;
-    MniDuplicateReadOnly.Checked := False;
-    MniDuplicateHidden.Checked := False;
-    MniDuplicateSystem.Checked := False;
-    MniDuplicateArchive.Checked := False;
+    MniDuplicateByContent.Checked := False;
     ChkBoxHeader.Checked := False;
     ChkLstBoxFileAttribute.Checked[0] := False;
     ChkLstBoxFileAttribute.Checked[1] := False;
-    ChkLstBoxFileAttribute.Checked[2] := False;
-    ChkLstBoxFileAttribute.Checked[3] := False;
-    ChkLstBoxFileAttribute.Checked[4] := False;
     MniDuplicateSelectAll.Caption := 'Выбрать все';
   end
   else
   begin
     MniDuplicateSelectAll.Checked := True;
     MniDuplicateOnName.Checked := True;
-    MniDuplicateReadOnly.Checked := True;
-    MniDuplicateHidden.Checked := True;
-    MniDuplicateSystem.Checked := True;
-    MniDuplicateArchive.Checked := True;
+    MniDuplicateByContent.Checked := True;
     ChkBoxHeader.Checked := True;
     ChkLstBoxFileAttribute.Checked[0] := True;
     ChkLstBoxFileAttribute.Checked[1] := True;
-    ChkLstBoxFileAttribute.Checked[2] := True;
-    ChkLstBoxFileAttribute.Checked[3] := True;
-    ChkLstBoxFileAttribute.Checked[4] := True;
     MniDuplicateSelectAll.Caption := 'Снять все';
-  end;
-end;
-
-procedure TMainForm.MniDuplicateReadOnlyClick(Sender: TObject);
-begin
-  if MniDuplicateReadOnly.Checked then
-  begin
-    MniDuplicateReadOnly.Checked := False;
-    ChkLstBoxFileAttribute.Checked[1] := False;
-    if ((ChkLstBoxFileAttribute.Checked[0] = False)
-      and(ChkLstBoxFileAttribute.Checked[2] = False)
-      and(ChkLstBoxFileAttribute.Checked[3] = False)
-      and(ChkLstBoxFileAttribute.Checked[4] = False))
-    then
-      ChkBoxHeader.Checked := False;
-  end
-  else
-  begin
-    MniDuplicateReadOnly.Checked := True;
-    ChkLstBoxFileAttribute.Checked[1] := True;
-    ChkBoxHeader.Checked := True;
-  end;
-end;
-
-procedure TMainForm.MniDuplicateHiddenClick(Sender: TObject);
-begin
-  if MniDuplicateHidden.Checked then
-  begin
-   MniDuplicateHidden.Checked := False;
-   ChkLstBoxFileAttribute.Checked[2] := False;
-    if ((ChkLstBoxFileAttribute.Checked[0] = False)
-      and(ChkLstBoxFileAttribute.Checked[1] = False)
-      and(ChkLstBoxFileAttribute.Checked[3] = False)
-      and(ChkLstBoxFileAttribute.Checked[4] = False))
-    then
-      ChkBoxHeader.Checked := False;
-  end
-  else
-  begin
-    MniDuplicateHidden.Checked := True;
-    ChkLstBoxFileAttribute.Checked[2] := True;
-    ChkBoxHeader.Checked := True;
-  end;
-end;
-
-procedure TMainForm.MniDuplicateSystemClick(Sender: TObject);
-begin
-  if MniDuplicateSystem.Checked then
-  begin
-    MniDuplicateSystem.Checked := False;
-    ChkLstBoxFileAttribute.Checked[3] := False;
-    if ((ChkLstBoxFileAttribute.Checked[0] = False)
-      and(ChkLstBoxFileAttribute.Checked[1] = False)
-      and(ChkLstBoxFileAttribute.Checked[2] = False)
-      and(ChkLstBoxFileAttribute.Checked[4] = False))
-    then
-      ChkBoxHeader.Checked := False;
-  end
-  else
-  begin
-    MniDuplicateSystem.Checked := True;
-    ChkLstBoxFileAttribute.Checked[3] := True;
-    ChkBoxHeader.Checked := True;
-  end;
-end;
-
-procedure TMainForm.MniDuplicateArchiveClick(Sender: TObject);
-begin
-  if MniDuplicateArchive.Checked then
-  begin
-    MniDuplicateArchive.Checked := False;
-    ChkLstBoxFileAttribute.Checked[4] := False;
-    if ((ChkLstBoxFileAttribute.Checked[0] = False)
-      and(ChkLstBoxFileAttribute.Checked[1] = False)
-      and(ChkLstBoxFileAttribute.Checked[2] = False)
-      and(ChkLstBoxFileAttribute.Checked[3] = False))
-    then
-      ChkBoxHeader.Checked := False;
-    end
-  else
-  begin
-    MniDuplicateArchive.Checked := True;
-    ChkLstBoxFileAttribute.Checked[4] := True;
-    ChkBoxHeader.Checked := True;
   end;
 end;
 
@@ -336,27 +222,42 @@ end;
 procedure TMainForm.MniPlayPauseClick(Sender: TObject);
 begin
   BtnPlayPause.Click;
-
 end;
 
-function TMainForm.test_check(Aobject: TCheckListBox;
-  ACheck: Boolean): Boolean;
+procedure TMainForm.MenuItmChkLstCheckUnchek(AObject: TMenuItem;
+  BOject: TCheckListBox; NumItem: Integer);
 begin
-  Aobject.Checked[4] := False;
-  Aobject.Checked[4] := False;
-    if ((ChkLstBoxFileAttribute.Checked[0] = False)
-      and(ChkLstBoxFileAttribute.Checked[1] = False)
-      and(ChkLstBoxFileAttribute.Checked[2] = False)
-      and(ChkLstBoxFileAttribute.Checked[3] = False))
-    then
-      ChkBoxHeader.Checked := False;
+  if AObject.Checked = False then
+  begin
+    AObject.Checked := True;
+    BOject.Checked[NumItem] := True;
+
+    case NumItem of
+      0 : begin
+            if BOject.Checked[NumItem] = True then
+            ChkBoxHeader.Checked := True;
+            if BOject.Checked[1] then
+            MniDuplicateSelectAll.Click;
+          end;
+      1:  begin
+            if BOject.Checked[NumItem] = True then
+            ChkBoxHeader.Checked := True;
+            if BOject.Checked[0] then
+            MniDuplicateSelectAll.Click;
+          end;
+    end;
+  end
+  else
+  begin
+    AObject.Checked := False;
+    BOject.Checked[NumItem] := False;
+    ChkBoxHeader.Checked := False;
+  end;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   FPictureGlyph.Free;
 end;
-
-
 
 end.
