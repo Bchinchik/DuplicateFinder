@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 432
-  Top = 138
+  Left = 247
+  Top = 141
   Width = 870
   Height = 789
   Caption = #1055#1086#1080#1089#1082' '#1076#1091#1073#1083#1080#1082#1072#1090#1086#1074' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
@@ -529,8 +529,8 @@ object MainForm: TMainForm
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 713
-    Width = 862
+    Top = 709
+    Width = 854
     Height = 22
     Panels = <
       item
