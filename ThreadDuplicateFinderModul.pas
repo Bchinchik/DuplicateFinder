@@ -50,7 +50,7 @@ begin
   DirList := TStringList.Create;
   DirList.Add(Startfolder);
   I := 0;
-  while I <= DirList.Count-1 do
+  while I <= DirList.Count - 1 do
   begin
 
     try
@@ -68,7 +68,7 @@ begin
       begin
         if MatchesMask(SearchRec.Name,MainForm.EdtFindMask.Text) then
         begin
-          FSearchStringListRezult.Add(SearchRec.Name+'   |   Путь:  '+DirList[I] + '\'+ SearchRec.Name);
+          FSearchStringListRezult.Add(SearchRec.Name + '   |   Путь:  '+DirList[I] + '\' + SearchRec.Name);
           Inc(FCountFile);
           FDirectorySearchString := DirList[I];
           Synchronize(SetLabelCountFile);
@@ -115,12 +115,13 @@ procedure ThreadFinder.Execute;
   var
     J,InPosFirst,InPosNext: Integer;
     CompareStrFist, CompareStrNext: string;
+    test: Integer;
 begin
-  FSearchStringListRezult:=TStringList.Create;
+  FSearchStringListRezult := TStringList.Create;
   GetDirFilesList(MainForm.DirectoryListBox1.Directory);
   if FindThread.Terminated then
     FindThread.Free;
-  MainForm.mmo1.Visible:=True;
+  MainForm.mmo1.Visible := True;
   MainForm.mmo1.Lines.Add('Сортировка и визуализация списка найденных файлов, подождите...');
   FSearchStringListRezult.Sort;
   MainForm.mmo1.Lines.AddStrings(FSearchStringListRezult);
@@ -136,17 +137,19 @@ begin
     else
     begin
       InPosFirst := AnsiPos(SubStr,MainForm.mmo1.Lines[FDuplicateIterator]);
-      InPosNext := AnsiPos(SubStr,MainForm.mmo1.Lines[FDuplicateIterator+1]);
-      CompareStrFist := Copy(MainForm.mmo1.Lines[FDuplicateIterator],1,InPosFirst-1);
-      CompareStrNext := Copy(MainForm.mmo1.Lines[FDuplicateIterator+1],1,InPosNext-1);
-      if AnsiCompareText(CompareStrFist,CompareStrNext)=0 then //First string = Next string = Duplicate
+      InPosNext := AnsiPos(SubStr,MainForm.mmo1.Lines[FDuplicateIterator + 1]);
+      CompareStrFist := Copy(MainForm.mmo1.Lines[FDuplicateIterator],1,InPosFirst - 1);
+      CompareStrNext := Copy(MainForm.mmo1.Lines[FDuplicateIterator + 1],1,InPosNext - 1);
+      if AnsiCompareText(CompareStrFist,CompareStrNext) = 0 then //First string = Next string = Duplicate
       begin
         BufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator];
         Synchronize(AddLinesMemo2);
-        BufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator+1];
+        BufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator + 1];
         Synchronize(AddLinesMemo2);
-        J := FDuplicateIterator+2;
-        while AnsiCompareText(Copy(MainForm.mmo1.Lines[FDuplicateIterator],1,InPosFirst-1),Copy(MainForm.mmo1.Lines[j],1,InPosNext-1))=0 do
+        J := FDuplicateIterator + 2;
+        CompareStrFist := Copy(MainForm.mmo1.Lines[FDuplicateIterator],1,InPosFirst - 1);
+        CompareStrNext := Copy(MainForm.mmo1.Lines[FDuplicateIterator + 1],1,InPosNext - 1);
+        while AnsiCompareText(CompareStrFist,CompareStrNext) = 0 do
         begin //поиск совпадений больше одного
           BufStrMemoAdd := MainForm.mmo1.Lines[J];
           Synchronize(AddLinesMemo2);
@@ -175,13 +178,13 @@ begin
     BufStrMemoAdd := 'Поиск Файлов по шаблону завершен.';
     Synchronize(AddLinesMemo2);
   end;
-  MainForm.stat1.Panels[2].Text:='Завершен';
-  MainForm.BtnStartFind.Enabled:=True;
-  MainForm.BtnStopFind.Visible:=False;
-  MainForm.BtnPlayPause.Visible:=False;
-  MainForm.MniStopFind.Enabled:=False;
-  MainForm.MniPlayPause.Enabled:=False;
-  MainForm.ProgressBar.Visible:=False;
+  MainForm.stat1.Panels[2].Text := 'Завершен';
+  MainForm.BtnStartFind.Enabled := True;
+  MainForm.BtnStopFind.Visible := False;
+  MainForm.BtnPlayPause.Visible := False;
+  MainForm.MniStopFind.Enabled := False;
+  MainForm.MniPlayPause.Enabled := False;
+  MainForm.ProgressBar.Visible := False;
 end;
 
 
