@@ -1,3 +1,10 @@
+{------------------------------------------------------------}
+{        Thread Duplicate Finder Modul                       }
+{       Copyright (c)        BChinchik                       }
+{                                                            }
+{       Developer:     Bogdan Chinchik                       }
+{       E-mail   :     Bchinchik@ua.fm                       }
+{------------------------------------------------------------}
 unit ThreadDuplicateFinderModul;
 
 interface
@@ -11,10 +18,11 @@ type
       FCountFile: Integer;
       FDuplicateIterator: Integer;
       FDirectorySearchString: string;
-      BufStrM1: string;
-      BufStrMemoAdd: string;
+     // BufStrM1: string;
+      FBufStrMemoAdd: string;
       FSearchStringListRezult: TStringList;
       procedure GetDirFilesList(StartFolder: string);
+      procedure GetDuplicateFiles;
       procedure SetLabelCountFile;
       procedure SetLabelPath;
       procedure SetProgressBar;
@@ -58,7 +66,7 @@ begin
       repeat
       if FindThread.Terminated then
         Break
-      else     //Выйти из поиска при нажатии на стоп
+      else
       if ((SearchRec.Attr and faDirectory) <> 0) and (SearchRec.Name[1] <> '.') then
       begin
         DirList.Add(ExpandFileName(DirList[I] + '\' + SearchRec.Name));
@@ -106,16 +114,10 @@ end;
 
 procedure ThreadFinder.AddLinesMemo2;
 begin
-  MainForm.mmo2.Lines.Add(BufStrMemoAdd);
+  MainForm.mmo2.Lines.Add(FBufStrMemoAdd);
 end;
 
 procedure ThreadFinder.Execute;
-  const
-    SubStr: string='   |';
-  var
-    J,InPosFirst,InPosNext: Integer;
-    CompareStrFist, CompareStrNext: string;
-    test: Integer;
 begin
   FSearchStringListRezult := TStringList.Create;
   GetDirFilesList(MainForm.DirectoryListBox1.Directory);
@@ -126,6 +128,24 @@ begin
   FSearchStringListRezult.Sort;
   MainForm.mmo1.Lines.AddStrings(FSearchStringListRezult);
   FSearchStringListRezult.Free;
+  GetDuplicateFiles;
+  MainForm.stat1.Panels[2].Text := 'Завершен';
+  MainForm.BtnStartFind.Enabled := True;
+  MainForm.BtnStopFind.Visible := False;
+  MainForm.BtnPlayPause.Visible := False;
+  MainForm.MniStopFind.Enabled := False;
+  MainForm.MniPlayPause.Enabled := False;
+  MainForm.ProgressBar.Visible := False;
+end;
+
+
+procedure ThreadFinder.GetDuplicateFiles;
+  const
+    SubStr: string='   |';
+  var
+    J,InPosFirst,InPosNext: Integer;
+    CompareStrFist, CompareStrNext: string;
+begin
   if MainForm.ChkBoxHeader.Checked then
   begin
     FDuplicateIterator := 0;
@@ -142,20 +162,20 @@ begin
       CompareStrNext := Copy(MainForm.mmo1.Lines[FDuplicateIterator + 1],1,InPosNext - 1);
       if AnsiCompareText(CompareStrFist,CompareStrNext) = 0 then //First string = Next string = Duplicate
       begin
-        BufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator];
+        FBufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator];
         Synchronize(AddLinesMemo2);
-        BufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator + 1];
+        FBufStrMemoAdd := MainForm.mmo1.Lines[FDuplicateIterator + 1];
         Synchronize(AddLinesMemo2);
         J := FDuplicateIterator + 2;
         CompareStrFist := Copy(MainForm.mmo1.Lines[FDuplicateIterator],1,InPosFirst - 1);
         CompareStrNext := Copy(MainForm.mmo1.Lines[FDuplicateIterator + 1],1,InPosNext - 1);
         while AnsiCompareText(CompareStrFist,CompareStrNext) = 0 do
-        begin //поиск совпадений больше одного
-          BufStrMemoAdd := MainForm.mmo1.Lines[J];
+        begin //Matches more than one
+          FBufStrMemoAdd := MainForm.mmo1.Lines[J];
           Synchronize(AddLinesMemo2);
           Inc(J);
         end;
-          BufStrMemoAdd := '____________________________________________________________________________________________________';
+          FBufStrMemoAdd := '____________________________________________________________________________________________________';
           Synchronize(AddLinesMemo2);
           Synchronize(SetProgressBar);
       end
@@ -175,17 +195,9 @@ begin
   end
   else
   begin
-    BufStrMemoAdd := 'Поиск Файлов по шаблону завершен.';
+    FBufStrMemoAdd := 'Поиск Файлов по шаблону завершен.';
     Synchronize(AddLinesMemo2);
   end;
-  MainForm.stat1.Panels[2].Text := 'Завершен';
-  MainForm.BtnStartFind.Enabled := True;
-  MainForm.BtnStopFind.Visible := False;
-  MainForm.BtnPlayPause.Visible := False;
-  MainForm.MniStopFind.Enabled := False;
-  MainForm.MniPlayPause.Enabled := False;
-  MainForm.ProgressBar.Visible := False;
 end;
-
 
 end.

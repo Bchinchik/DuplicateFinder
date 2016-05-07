@@ -1,3 +1,11 @@
+{------------------------------------------------------------}
+{               Duplicate Finder Modul                       }
+{       Copyright (c)        BChinchik                       }
+{                                                            }
+{       Developer:     Bogdan Chinchik                       }
+{       E-mail   :     Bchinchik@ua.fm                       }
+{------------------------------------------------------------}
+
 unit DuplicateFinder;
 
 interface
