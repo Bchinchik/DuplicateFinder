@@ -14,7 +14,7 @@ type
       BufStrM1: string;
       BufStrMemoAdd: string;
       FSearchStringListRezult: TStringList;
-      procedure GetDirListCopyFiles(StartFolder: string);
+      procedure GetDirFilesList(StartFolder: string);
       procedure SetLabelCountFile;
       procedure SetLabelPath;
       procedure SetProgressBar;
@@ -41,7 +41,7 @@ begin
   Resume;
 end;
 
-procedure ThreadFinder.GetDirListCopyFiles(StartFolder: string);
+procedure ThreadFinder.GetDirFilesList(StartFolder: string);
   var
     SearchRec: TSearchRec;
     DirList: TStringList;
@@ -117,7 +117,7 @@ procedure ThreadFinder.Execute;
     CompareStrFist, CompareStrNext: string;
 begin
   FSearchStringListRezult:=TStringList.Create;
-  GetDirListCopyFiles(MainForm.DirectoryListBox1.Directory);
+  GetDirFilesList(MainForm.DirectoryListBox1.Directory);
   if FindThread.Terminated then
     FindThread.Free;
   MainForm.mmo1.Visible:=True;
