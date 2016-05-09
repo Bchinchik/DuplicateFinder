@@ -146,7 +146,7 @@ procedure ThreadFinder.GetDuplicateFiles;
   const
     SubStr: string='   |';
   var
-    J,InPosFirst,InPosNext: Integer;
+    J,SubStrPosFirst,SubStrPosNext: Integer;
     CompareStrFist, CompareStrNext: string;
 begin
   if MainForm.ChkBoxHeader.Checked then
@@ -161,10 +161,10 @@ begin
       Break
     else
     begin
-      InPosFirst := AnsiPos(SubStr,FSearchStringListRezult[FDuplicateIterator]);
-      InPosNext := AnsiPos(SubStr,FSearchStringListRezult[FDuplicateIterator + 1]);
-      CompareStrFist := Copy(FSearchStringListRezult[FDuplicateIterator],1,InPosFirst - 1);
-      CompareStrNext := Copy(FSearchStringListRezult[FDuplicateIterator + 1],1,InPosNext - 1);
+      SubStrPosFirst := AnsiPos(SubStr,FSearchStringListRezult[FDuplicateIterator]);
+      SubStrPosNext := AnsiPos(SubStr,FSearchStringListRezult[FDuplicateIterator + 1]);
+      CompareStrFist := Copy(FSearchStringListRezult[FDuplicateIterator],1,SubStrPosFirst - 1);
+      CompareStrNext := Copy(FSearchStringListRezult[FDuplicateIterator + 1],1,SubStrPosNext - 1);
       //First string = Next string = Duplicate
       if AnsiCompareText(CompareStrFist,CompareStrNext) = 0 then
       begin
@@ -173,16 +173,16 @@ begin
         FBufStrMemoAdd := FSearchStringListRezult[FDuplicateIterator + 1];
         Synchronize(AddLinesMemo2);
         J := FDuplicateIterator + 2;
-        CompareStrFist := Copy(FSearchStringListRezult[FDuplicateIterator],1,InPosFirst - 1);
-        CompareStrNext := Copy(FSearchStringListRezult[j],1,InPosNext - 1);
+        CompareStrFist := Copy(FSearchStringListRezult[FDuplicateIterator],1,SubStrPosFirst - 1);
+        CompareStrNext := Copy(FSearchStringListRezult[j],1,SubStrPosNext - 1);
         while AnsiCompareText(CompareStrFist,CompareStrNext) = 0 do
         //Matches more than one
         begin
           FBufStrMemoAdd := FSearchStringListRezult[J];
           Synchronize(AddLinesMemo2);
           Inc( J );
-          CompareStrFist := Copy(FSearchStringListRezult[FDuplicateIterator],1,InPosFirst - 1);
-          CompareStrNext := Copy(FSearchStringListRezult[j],1,InPosNext - 1);
+          CompareStrFist := Copy(FSearchStringListRezult[FDuplicateIterator],1,SubStrPosFirst - 1);
+          CompareStrNext := Copy(FSearchStringListRezult[j],1,SubStrPosNext - 1);
         end;
           FBufStrMemoAdd := '____________________________________________________________________________________________________';
           Synchronize(AddLinesMemo2);
@@ -190,12 +190,12 @@ begin
       end
       else
         Synchronize(SetProgressBar);
-        if FDuplicateIterator = 0 then
-           FDuplicateIterator := 1
-        else
-        if J = 1 then
-           Inc( FDuplicateIterator )
-        else
+     //   if FDuplicateIterator = 0 then
+     //      FDuplicateIterator := 1
+     //   else
+     //   if J = 1 then
+     //      Inc( FDuplicateIterator )
+     //   else
         if FDuplicateIterator < J then
            FDuplicateIterator := J
         else

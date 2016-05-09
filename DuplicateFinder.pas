@@ -99,7 +99,7 @@ begin
   MniPlayPause.Enabled := True;
   stat1.Panels[2].Text := 'ֶהטעו...';
   FPictureGlyph := TBitmap.Create;
-  FPictureGlyph.LoadFromFile(FCurDir+'\icons\control_pause_blue.bmp');
+  FPictureGlyph.LoadFromFileS(FCurDir+'\icons\control_pause_blue.bmp');
   BtnPlayPause.Glyph := FPictureGlyph;
 
 end;
