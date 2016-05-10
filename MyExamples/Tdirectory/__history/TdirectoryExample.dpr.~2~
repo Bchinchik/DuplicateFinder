@@ -1,0 +1,35 @@
+program TdirectoryExample;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils,
+  System.IOUtils,
+  System.Types;
+
+var
+  Disks, Dirs: TStringDynArray;
+  I: Integer;
+  F: TextFile;
+begin
+  try
+    { TODO -oUser -cConsole Main : Insert code here }
+     Disks := TDirectory.GetLogicalDrives;
+     for I := Low(Disks) to High(Disks) do
+       Writeln(Disks[I]);
+     Readln;
+     Dirs := TDirectory.GetDirectories(Disks[1],'*',TSearchOption(1));
+     Assign(F,'dir.txt');
+     Rewrite(F);
+     for I := Low(Dirs) to High(Dirs) do
+       Writeln(f,Dirs[I]);
+     Close(F);
+     Writeln('Готово!');
+     Readln;
+  except
+    on E: Exception do
+      Writeln(E.ClassName, ': ', E.Message);
+  end;
+end.
