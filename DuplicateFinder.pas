@@ -5,7 +5,7 @@
 {       Developer:     Bogdan Chinchik                       }
 {       E-mail   :     Bchinchik@ua.fm                       }
 {------------------------------------------------------------}
-
+//test remote commit to repository
 unit DuplicateFinder;
 
 interface
