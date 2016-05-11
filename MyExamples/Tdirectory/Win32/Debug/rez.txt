@@ -1,0 +1,30 @@
+d:\disk d\Install\WinXP\I386\DISK1
+d:\disk d\Install\WinXP\I386\HOSTS
+d:\disk d\Install\WinXP\I386\NTLDR
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE1
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE10
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE11
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE12
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE13
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE2
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE3
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE4
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE5
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE6
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE7
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE8
+d:\disk d\Install\WinXP\I386\WIN9XMIG\ACROBAT\FILES\FILE9
+d:\disk d\Install\WinXP\WIN51
+d:\disk d\Install\WinXP\WIN51IP
+d:\disk d\Kurs_SPZ\Kurs_SPZ\RCa04708
+d:\disk d\Kurs_SPZ_old\RCa04708
+d:\disk d\Obmen\1df_all\Бест-Звіт 1DF_media\DB\1DFData
+d:\disk d\Obmen\1df_all\Бест-Звіт 1DF_plus\DB\1DFData
+d:\disk d\Obmen\1df_all\Бест-Звіт 1DF_servis\DB\1DFData
+d:\disk d\Obmen\1df_all\Бест-Звіт 1DF_tele\DB\1DFData
+d:\disk d\Obmen\1df_all\Бест-Звіт 1DF_vizit\DB\1DFData
+d:\disk d\Obmen\Рабочий стол\C3200_doc\startup-config-c3200
+d:\disk d\RadAsm\RadAsm\hla\Projects\Dialog\makefile
+d:\disk d\RadAsm\RadAsm\hla\Projects\hw\Makefile
+d:\disk d\RadAsm\RadAsm\hla\Sniplets\makefiles\console-makefile
+d:\disk d\RadAsm\RadAsm\hla\Sniplets\makefiles\makefile
