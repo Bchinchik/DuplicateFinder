@@ -50,6 +50,11 @@ type
     MniSeparator2: TMenuItem;
     MniDuplicateSelectAll: TMenuItem;
     MniSeparator1: TMenuItem;
+    lbl1: TLabel;
+    ChkReadOnly: TCheckBox;
+    ChkHidden: TCheckBox;
+    ChkSystem: TCheckBox;
+    ChkArchive: TCheckBox;
     procedure BtnStartFindClick(Sender: TObject);
     procedure BtnStopFindClick(Sender: TObject);
     procedure BtnPlayPauseClick(Sender: TObject);
@@ -99,7 +104,7 @@ begin
   MniPlayPause.Enabled := True;
   stat1.Panels[2].Text := 'ֶהטעו...';
   FPictureGlyph := TBitmap.Create;
-  FPictureGlyph.LoadFromFileS(FCurDir+'\icons\control_pause_blue.bmp');
+  FPictureGlyph.LoadFromFile(FCurDir+'\icons\control_pause_blue.bmp');
   BtnPlayPause.Glyph := FPictureGlyph;
 
 end;

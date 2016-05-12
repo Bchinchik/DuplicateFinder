@@ -498,7 +498,7 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    Text = '*.*'
+    Text = '*'
   end
   object DirectoryListBox1: TDirectoryListBox
     Left = 3
@@ -529,8 +529,8 @@ object MainForm: TMainForm
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 633
-    Width = 661
+    Top = 637
+    Width = 669
     Height = 22
     Panels = <
       item
@@ -552,6 +552,19 @@ object MainForm: TMainForm
     Width = 302
     Height = 275
     TabOrder = 8
+    object lbl1: TLabel
+      Left = 24
+      Top = 104
+      Width = 225
+      Height = 24
+      Caption = #1057' '#1091#1095#1077#1090#1086#1084' '#1072#1090#1088#1080#1073#1091#1090#1086#1074':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
     object ChkBoxHeader: TCheckBox
       Left = 8
       Top = 16
@@ -566,6 +579,70 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
+    end
+    object ChkReadOnly: TCheckBox
+      Left = 16
+      Top = 144
+      Width = 209
+      Height = 25
+      Caption = #1058#1086#1083#1100#1082#1086' '#1095#1090#1077#1085#1080#1077
+      Checked = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 1
+    end
+    object ChkHidden: TCheckBox
+      Left = 16
+      Top = 168
+      Width = 209
+      Height = 25
+      Caption = #1057#1082#1088#1099#1090#1099#1077
+      Checked = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 2
+    end
+    object ChkSystem: TCheckBox
+      Left = 16
+      Top = 192
+      Width = 209
+      Height = 25
+      Caption = #1057#1080#1089#1090#1077#1084#1085#1099#1077
+      Checked = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 3
+    end
+    object ChkArchive: TCheckBox
+      Left = 16
+      Top = 216
+      Width = 201
+      Height = 25
+      Caption = #1040#1088#1093#1080#1074#1085#1099#1077
+      Checked = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 4
     end
   end
   object MmoDuplicateRezult: TMemo
