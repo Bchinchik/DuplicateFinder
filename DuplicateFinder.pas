@@ -72,6 +72,7 @@ type
     procedure MniStopFindClick(Sender: TObject);
     procedure MniPlayPauseClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure MniAboutClick(Sender: TObject);
 
 
   private
@@ -263,6 +264,13 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   FPictureGlyph.Free;
+end;
+
+procedure TMainForm.MniAboutClick(Sender: TObject);
+begin
+ MessageDlg('Duplicate Finder Modul'+#13#10+'Copyright (c)   BChinchik'+
+  #13#10+'Developer:        Bogdan Chinchik'+#13#10+
+  'E-mail   :           Bchinchik@ua.fm',mtCustom,[mbOK],0)
 end;
 
 end.

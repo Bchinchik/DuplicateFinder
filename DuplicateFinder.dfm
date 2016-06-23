@@ -555,7 +555,7 @@ object MainForm: TMainForm
     object lbl1: TLabel
       Left = 24
       Top = 104
-      Width = 225
+      Width = 206
       Height = 24
       Caption = #1057' '#1091#1095#1077#1090#1086#1084' '#1072#1090#1088#1080#1073#1091#1090#1086#1074':'
       Font.Charset = DEFAULT_CHARSET
@@ -587,6 +587,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1058#1086#1083#1100#1082#1086' '#1095#1090#1077#1085#1080#1077
       Checked = True
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -603,6 +604,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1057#1082#1088#1099#1090#1099#1077
       Checked = True
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -619,6 +621,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1057#1080#1089#1090#1077#1084#1085#1099#1077
       Checked = True
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -635,6 +638,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1040#1088#1093#1080#1074#1085#1099#1077
       Checked = True
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -916,6 +920,7 @@ object MainForm: TMainForm
         end
         object MniDuplicateByContent: TMenuItem
           Caption = #1055#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1084#1091
+          Enabled = False
           OnClick = MniDuplicateByContentClick
         end
         object MniSeparator1: TMenuItem
@@ -966,6 +971,7 @@ object MainForm: TMainForm
             6F6666666666666F00006EF6BFBFBFF6F6F6F6F6F6F6F66F00006FF6F6F6F666
             6E6E6E6E6E6F6F6F00006F6F6E6E6F6F00000000000000000000}
           Caption = #1042#1099#1073#1088#1072#1090#1100' '#1074#1089#1077
+          Enabled = False
           OnClick = MniDuplicateSelectAllClick
         end
       end
@@ -1335,6 +1341,7 @@ object MainForm: TMainForm
           FFFFFFECE1EB09D900FF00D9D90909E2E1D9E1E20909D9D900FF0000D9D9EB09
           09090909EBD9D90000FF00000000D9D9D9D8D9D9D900000000FF}
         Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
+        OnClick = MniAboutClick
       end
     end
   end
