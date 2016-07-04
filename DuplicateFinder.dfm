@@ -1,5 +1,5 @@
 object MainForm: TMainForm
-  Left = 260
+  Left = 465
   Top = 140
   Width = 677
   Height = 713
@@ -554,7 +554,7 @@ object MainForm: TMainForm
     TabOrder = 8
     object lbl1: TLabel
       Left = 24
-      Top = 104
+      Top = 130
       Width = 206
       Height = 24
       Caption = #1057' '#1091#1095#1077#1090#1086#1084' '#1072#1090#1088#1080#1073#1091#1090#1086#1074':'
@@ -582,9 +582,9 @@ object MainForm: TMainForm
     end
     object ChkReadOnly: TCheckBox
       Left = 16
-      Top = 144
+      Top = 170
       Width = 209
-      Height = 25
+      Height = 26
       Caption = #1058#1086#1083#1100#1082#1086' '#1095#1090#1077#1085#1080#1077
       Checked = True
       Enabled = False
@@ -599,9 +599,9 @@ object MainForm: TMainForm
     end
     object ChkHidden: TCheckBox
       Left = 16
-      Top = 168
+      Top = 194
       Width = 209
-      Height = 25
+      Height = 26
       Caption = #1057#1082#1088#1099#1090#1099#1077
       Checked = True
       Enabled = False
@@ -616,9 +616,9 @@ object MainForm: TMainForm
     end
     object ChkSystem: TCheckBox
       Left = 16
-      Top = 192
+      Top = 218
       Width = 209
-      Height = 25
+      Height = 26
       Caption = #1057#1080#1089#1090#1077#1084#1085#1099#1077
       Checked = True
       Enabled = False
@@ -633,9 +633,9 @@ object MainForm: TMainForm
     end
     object ChkArchive: TCheckBox
       Left = 16
-      Top = 216
+      Top = 242
       Width = 201
-      Height = 25
+      Height = 26
       Caption = #1040#1088#1093#1080#1074#1085#1099#1077
       Checked = True
       Enabled = False
@@ -784,11 +784,11 @@ object MainForm: TMainForm
     Margin = 5
     Spacing = 17
   end
-  object ChkLstBoxFileAttribute: TCheckListBox
-    Left = 371
+  object ChkLstBoxFindCriteria: TCheckListBox
+    Left = 352
     Top = 110
-    Width = 262
-    Height = 43
+    Width = 289
+    Height = 67
     Enabled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -797,8 +797,9 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ItemHeight = 16
     Items.Strings = (
-      #1055#1086' '#1080#1084#1077#1085#1080
-      #1055#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1084#1091)
+      #1055#1086' '#1080#1084#1077#1085#1080' '#1092#1072#1081#1083#1086#1074
+      #1057' '#1091#1095#1077#1090#1086#1084' '#1088#1072#1079#1084#1077#1088#1072' '#1092#1072#1081#1083#1086#1074
+      #1057' '#1091#1095#1077#1090#1086#1084' '#1087#1086#1089#1083'. '#1076#1072#1090#1099' '#1084#1086#1076#1080#1092#1080#1082#1072#1094#1080#1080)
     ParentFont = False
     TabOrder = 12
   end
@@ -918,10 +919,13 @@ object MainForm: TMainForm
           Caption = #1055#1086' '#1080#1084#1077#1085#1080
           OnClick = MniDuplicateOnNameClick
         end
-        object MniDuplicateByContent: TMenuItem
-          Caption = #1055#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1084#1091
-          Enabled = False
-          OnClick = MniDuplicateByContentClick
+        object MniDuplicateBySize: TMenuItem
+          Caption = #1055#1086' '#1088#1072#1079#1084#1077#1088#1091
+          OnClick = MniDuplicateBySizeClick
+        end
+        object MniDuplicateByDate: TMenuItem
+          Caption = #1055#1086' '#1076#1072#1090#1077' '#1084#1086#1076#1080#1092#1080#1082#1072#1094#1080#1080
+          OnClick = MniDuplicateByDateClick
         end
         object MniSeparator1: TMenuItem
           Caption = '-'
@@ -971,7 +975,6 @@ object MainForm: TMainForm
             6F6666666666666F00006EF6BFBFBFF6F6F6F6F6F6F6F66F00006FF6F6F6F666
             6E6E6E6E6E6F6F6F00006F6F6E6E6F6F00000000000000000000}
           Caption = #1042#1099#1073#1088#1072#1090#1100' '#1074#1089#1077
-          Enabled = False
           OnClick = MniDuplicateSelectAllClick
         end
       end

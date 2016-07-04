@@ -10,7 +10,7 @@ unit ThreadDuplicateFinderModul;
 interface
 
 uses
-  Classes, SysUtils, Masks, StdCtrls;
+  Classes, SysUtils, Masks, StdCtrls, Dialogs;
 
 type
   ThreadFinder = class(TThread)
@@ -20,18 +20,22 @@ type
       FDirSearchPath: string;
       FBufStrMemoAdd: string;
       FSearchStrLiRez: TStringList;
-      procedure GetDirFilesList(StartFolder: string);
+      FStartFolder: string;
+      FFindCriteria : Integer;
+      procedure GetDirFilesList;
       procedure GetDuplicateFiles;
-      function  SetSearchAttr(ReadOnly, Hidden, System, Archive: TCheckBox): Integer;
       procedure SetLabelCountFile;
       procedure SetLabelPath;
       procedure SetProgressBar;
       procedure AddLinesMemo2;
       procedure SuccessExecuteEnd;
+
   protected
       procedure Execute; override;
+      procedure tt; virtual; 
   public
-      constructor Create; overload;
+      constructor Create(Param1: string; Param2: Integer);
+
   end;
 
 implementation
@@ -46,26 +50,28 @@ begin
   inherited Create(True);
   FreeOnTerminate := True;
   Self.Priority := tpNormal;
+  FStartFolder := Param1;
+  FFindCriteria := Param2;
+  //tt;
   Resume;
+
 end;
 
-procedure ThreadFinder.GetDirFilesList(StartFolder: string);
+procedure ThreadFinder.GetDirFilesList;
   var
     SearchRec: TSearchRec;
     DirList: TStringList;
     I: Integer;
-    Attr: Integer;
+
 begin
   DirList := TStringList.Create;
-  DirList.Add(Startfolder);
+  DirList.Add(FStartFolder);
   I := 0;
-  Attr := SetSearchAttr(MainForm.ChkReadOnly,MainForm.ChkHidden,
-  MainForm.ChkSystem,MainForm.ChkArchive);
-  while I <= DirList.Count - 1 do
+ while I <= DirList.Count - 1 do
   begin
 
     try
-    if FindFirst(ExpandFileName(DirList[I] + '\*.*'), Attr, SearchRec) = 0 then
+    if FindFirst(ExpandFileName(DirList[I] + '\*.*'),faAnyFile, SearchRec) = 0 then
       repeat
       if FindThread.Terminated then
         Break
@@ -129,8 +135,9 @@ end;
 
 procedure ThreadFinder.Execute;
 begin
+  Synchronize(tt);
   FSearchStrLiRez := TStringList.Create;
-  GetDirFilesList(MainForm.DirectoryListBox1.Directory);
+  GetDirFilesList;
   FSearchStrLiRez.Sort;
   GetDuplicateFiles;
   FSearchStrLiRez.Free;
@@ -145,7 +152,7 @@ procedure ThreadFinder.GetDuplicateFiles;
     J,SubStrPosFirst,SubStrPosNext: Integer;
     CmprStrFist, CmprStrNext: string;
 begin
-  if MainForm.ChkBoxHeader.Checked then
+  if FFindCriteria = 1 then
   begin
     FBufStrMemoAdd := 'Сортировка и визуализация списка найденных файлов, подождите...';
     Synchronize(AddLinesMemo2);
@@ -216,20 +223,12 @@ begin
   MainForm.ProgressBar.Visible := False;
 end;
 
-function ThreadFinder.SetSearchAttr(ReadOnly, Hidden, System,
-  Archive: TCheckBox): Integer;
+
+
+
+procedure ThreadFinder.tt;
 begin
-
-
-  Result := faDirectory;
-  if  ReadOnly.Checked then
-  Result := Result + faReadOnly;
-  //if not Hidden.Checked then
-  //Result := faAnyFile xor faHidden;
-  //if not System.Checked then
-  //Result := faAnyFile xor faSysFile;
-  //if not Archive.Checked then
-  //Result := faAnyFile xor faArchive;
+      ShowMessage('////////////////');
 end;
 
 end.

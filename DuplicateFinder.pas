@@ -5,7 +5,7 @@
 {       Developer:     Bogdan Chinchik                       }
 {       E-mail   :     Bchinchik@ua.fm                       }
 {------------------------------------------------------------}
-//test remote commit to repository
+
 unit DuplicateFinder;
 
 interface
@@ -15,6 +15,8 @@ uses
   Dialogs, StdCtrls, Buttons, FileCtrl, CheckLst, ComCtrls, Masks, ExtCtrls,
   StrUtils, ThreadDuplicateFinderModul, ActnList, ToolWin, ActnMan, ActnCtrls,
   ActnMenus, ImgList, XPStyleActnCtrls, Menus;
+
+
 
 type
   TMainForm = class(TForm)
@@ -35,7 +37,7 @@ type
     ProgressBar: TProgressBar;
     grp1:TGroupBox;
     BtnExit: TBitBtn;
-    ChkLstBoxFileAttribute: TCheckListBox;
+    ChkLstBoxFindCriteria: TCheckListBox;
     MainMenu: TMainMenu;
     MniMenu: TMenuItem;
     MniStartFind: TMenuItem;
@@ -46,7 +48,8 @@ type
     MniPlayPause: TMenuItem;
     MniExit: TMenuItem;
     MniDuplicateOnName: TMenuItem;
-    MniDuplicateByContent: TMenuItem;
+    MniDuplicateBySize: TMenuItem;
+    MniDuplicateByDate: TMenuItem;
     MniSeparator2: TMenuItem;
     MniDuplicateSelectAll: TMenuItem;
     MniSeparator1: TMenuItem;
@@ -55,6 +58,7 @@ type
     ChkHidden: TCheckBox;
     ChkSystem: TCheckBox;
     ChkArchive: TCheckBox;
+
     procedure BtnStartFindClick(Sender: TObject);
     procedure BtnStopFindClick(Sender: TObject);
     procedure BtnPlayPauseClick(Sender: TObject);
@@ -68,22 +72,30 @@ type
     procedure MniStartFindClick(Sender: TObject);
     procedure MniDuplicateOnNameClick(Sender: TObject);
     procedure MniDuplicateSelectAllClick(Sender: TObject);
-    procedure MniDuplicateByContentClick(Sender: TObject);
+    procedure MniDuplicateBySizeClick(Sender: TObject);
     procedure MniStopFindClick(Sender: TObject);
     procedure MniPlayPauseClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure MniAboutClick(Sender: TObject);
+    procedure MniDuplicateByDateClick(Sender: TObject);
 
 
   private
     { Private declarations }
     FCurDir: string;
     FPictureGlyph: TBitmap;
-    procedure MenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; NumItem: Integer);
+    procedure FMenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; CheckHeader: TCheckBox; NumItem: Integer);
+    function  FGetFindCriteria: Integer;
   public
     { Public declarations }
+    property FindCriteria: Integer read FGetFindCriteria;
   end;
+    test = class(ThreadFinder)
 
+     protected
+       procedure tt; override;
+
+  end;
 var
   MainForm: TMainForm;
   FindThread: ThreadFinder;
@@ -97,7 +109,8 @@ begin
 
   MmoDuplicateRezult.Lines.Clear;
   ProgressBar.Position := 0;
-  FindThread:=ThreadFinder.Create;
+  //ShowMessage(IntToStr(FindCriteria));
+  FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria);
   BtnStartFind.Enabled := False;
   BtnStopFind.Visible := True;
   BtnPlayPause.Visible := True;
@@ -113,13 +126,19 @@ end;
 procedure TMainForm.BtnStopFindClick(Sender: TObject);
 begin
   FindThread.Terminate;
+  MmoDuplicateRezult.Lines.Clear;
+  ProgressBar.Visible := False;
   BtnStartFind.Enabled := True;
   BtnStopFind.Visible := False;
   BtnPlayPause.Visible := False;
   MniStopFind.Enabled := False;
   MniPlayPause.Enabled := False;
   stat1.Panels[2].Text := 'Отменен';
-
+  BtnPlayPause.Caption := 'Приостановить';
+    FPictureGlyph.LoadFromFile(FCurDir+'\icons\control_pause_blue.bmp');
+    BtnPlayPause.Glyph := FPictureGlyph;
+    MniPlayPause.Caption := 'Приостановить';
+    MniPlayPause.Bitmap := FPictureGlyph;
 end;
 
 procedure TMainForm.BtnPlayPauseClick(Sender: TObject);
@@ -188,12 +207,16 @@ end;
 
 procedure TMainForm.MniDuplicateOnNameClick(Sender: TObject);
 begin
-  MenuItmChkLstCheckUnchek(MniDuplicateOnName,ChkLstBoxFileAttribute,0 );
+  FMenuItmChkLstCheckUnchek(MniDuplicateOnName,ChkLstBoxFindCriteria,ChkBoxHeader,0 );
 end;
 
-procedure TMainForm.MniDuplicateByContentClick(Sender: TObject);
+procedure TMainForm.MniDuplicateBySizeClick(Sender: TObject);
 begin
-  MenuItmChkLstCheckUnchek(MniDuplicateByContent,ChkLstBoxFileAttribute,1);
+  FMenuItmChkLstCheckUnchek(MniDuplicateBySize,ChkLstBoxFindCriteria,ChkBoxHeader,1);
+end;
+procedure TMainForm.MniDuplicateByDateClick(Sender: TObject);
+begin
+  FMenuItmChkLstCheckUnchek(MniDuplicateByDate,ChkLstBoxFindCriteria,ChkBoxHeader,2);
 end;
 
 procedure TMainForm.MniDuplicateSelectAllClick(Sender: TObject);
@@ -202,20 +225,24 @@ begin
   begin
     MniDuplicateSelectAll.Checked := False;
     MniDuplicateOnName.Checked := False;
-    MniDuplicateByContent.Checked := False;
+    MniDuplicateBySize.Checked := False;
+    MniDuplicateByDate.Checked := False;
     ChkBoxHeader.Checked := False;
-    ChkLstBoxFileAttribute.Checked[0] := False;
-    ChkLstBoxFileAttribute.Checked[1] := False;
+    ChkLstBoxFindCriteria.Checked[0] := False;
+    ChkLstBoxFindCriteria.Checked[1] := False;
+    ChkLstBoxFindCriteria.Checked[2] := False;
     MniDuplicateSelectAll.Caption := 'Выбрать все';
   end
   else
   begin
     MniDuplicateSelectAll.Checked := True;
     MniDuplicateOnName.Checked := True;
-    MniDuplicateByContent.Checked := True;
+    MniDuplicateBySize.Checked := True;
+    MniDuplicateByDate.Checked := True;
     ChkBoxHeader.Checked := True;
-    ChkLstBoxFileAttribute.Checked[0] := True;
-    ChkLstBoxFileAttribute.Checked[1] := True;
+    ChkLstBoxFindCriteria.Checked[0] := True;
+    ChkLstBoxFindCriteria.Checked[1] := True;
+    ChkLstBoxFindCriteria.Checked[2] := True;
     MniDuplicateSelectAll.Caption := 'Снять все';
   end;
 end;
@@ -230,34 +257,62 @@ begin
   BtnPlayPause.Click;
 end;
 
-procedure TMainForm.MenuItmChkLstCheckUnchek(AObject: TMenuItem;
-  BOject: TCheckListBox; NumItem: Integer);
+procedure TMainForm.FMenuItmChkLstCheckUnchek(AObject: TMenuItem;
+  BOject: TCheckListBox; CheckHeader: TCheckBox; NumItem: Integer);
 begin
   if AObject.Checked = False then
   begin
     AObject.Checked := True;
     BOject.Checked[NumItem] := True;
-
+    CheckHeader.Checked := True;
     case NumItem of
-      0 : begin
-            if BOject.Checked[NumItem] = True then
-            ChkBoxHeader.Checked := True;
-            if BOject.Checked[1] then
-            MniDuplicateSelectAll.Click;
-          end;
-      1:  begin
-            if BOject.Checked[NumItem] = True then
-            ChkBoxHeader.Checked := True;
-            if BOject.Checked[0] then
-            MniDuplicateSelectAll.Click;
-          end;
+      0 : if (BOject.Checked[1])or(BOject.Checked[2]) then
+            begin
+              MniDuplicateSelectAll.Checked := True;
+              MniDuplicateSelectAll.Caption := 'Снять все';
+            end;
+
+      1:  if (BOject.Checked[0])or(BOject.Checked[2]) then
+            begin
+              MniDuplicateSelectAll.Checked := True;
+              MniDuplicateSelectAll.Caption := 'Снять все';
+            end;
+      2:  if (BOject.Checked[0])or(BOject.Checked[1]) then
+            begin
+              MniDuplicateSelectAll.Checked := True;
+              MniDuplicateSelectAll.Caption := 'Снять все';
+            end;
+
     end;
   end
+
   else
   begin
     AObject.Checked := False;
     BOject.Checked[NumItem] := False;
-    ChkBoxHeader.Checked := False;
+   // ChkBoxHeader.Checked := False;
+   case NumItem of
+      0 : if not((BOject.Checked[1])or(BOject.Checked[2])) then
+            begin
+              CheckHeader.Checked := False;
+              MniDuplicateSelectAll.Checked := False;
+              MniDuplicateSelectAll.Caption := 'Выбрать все';
+            end;
+      1:  if not((BOject.Checked[0])or(BOject.Checked[2])) then
+            begin
+              CheckHeader.Checked := False;
+              MniDuplicateSelectAll.Checked := False;
+              MniDuplicateSelectAll.Caption := 'Выбрать все';
+            end;
+      2:  if not((BOject.Checked[0])or(BOject.Checked[1])) then
+            begin
+              CheckHeader.Checked := False;
+              MniDuplicateSelectAll.Checked := False;
+              MniDuplicateSelectAll.Caption := 'Выбрать все';
+            end;
+
+
+    end;
   end;
 end;
 
@@ -271,6 +326,28 @@ begin
  MessageDlg('Duplicate Finder Modul'+#13#10+'Copyright (c)   BChinchik'+
   #13#10+'Developer:        Bogdan Chinchik'+#13#10+
   'E-mail   :           Bchinchik@ua.fm',mtCustom,[mbOK],0)
+end;
+
+
+
+function TMainForm.FGetFindCriteria: Integer;
+begin
+ if ChkLstBoxFindCriteria.Checked[0] and (not(ChkLstBoxFindCriteria.Checked[1])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 1;
+ if ChkLstBoxFindCriteria.Checked[1] and (not(ChkLstBoxFindCriteria.Checked[0])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 2;
+ if ChkLstBoxFindCriteria.Checked[2] and (not(ChkLstBoxFindCriteria.Checked[0])) and (not(ChkLstBoxFindCriteria.Checked[1]))  then Result := 3;
+ if ChkLstBoxFindCriteria.Checked[0] and ((ChkLstBoxFindCriteria.Checked[1])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 4;
+ if ChkLstBoxFindCriteria.Checked[0] and (not(ChkLstBoxFindCriteria.Checked[1])) and ((ChkLstBoxFindCriteria.Checked[2]))  then Result := 5;
+ if ChkLstBoxFindCriteria.Checked[1] and ((ChkLstBoxFindCriteria.Checked[2])) and (not(ChkLstBoxFindCriteria.Checked[0]))  then Result := 6;
+ if ChkLstBoxFindCriteria.Checked[0] and ((ChkLstBoxFindCriteria.Checked[1])) and ((ChkLstBoxFindCriteria.Checked[2]))  then Result := 7;
+
+end;
+
+{ test }
+
+procedure test.tt;
+begin
+ inherited;
+    ShowMessage('!!!!!!!!!!');
 end;
 
 end.
