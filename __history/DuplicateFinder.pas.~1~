@@ -16,6 +16,9 @@ uses
   StrUtils, ThreadDuplicateFinderModul, ActnList, ToolWin, ActnMan, ActnCtrls,
   ActnMenus, ImgList, XPStyleActnCtrls, Menus;
 
+//const
+//MY_MESS = WM_USER + 100;
+
 type
   TMainForm = class(TForm)
     BtnStartFind: TBitBtn;
@@ -56,6 +59,7 @@ type
     ChkHidden: TCheckBox;
     ChkSystem: TCheckBox;
     ChkArchive: TCheckBox;
+
     procedure BtnStartFindClick(Sender: TObject);
     procedure BtnStopFindClick(Sender: TObject);
     procedure BtnPlayPauseClick(Sender: TObject);
@@ -75,22 +79,29 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure MniAboutClick(Sender: TObject);
     procedure MniDuplicateByDateClick(Sender: TObject);
+
+
   private
     { Private declarations }
     FCurDir: string;
     FPictureGlyph: TBitmap;
-    FindThread: ThreadFinder;
-    procedure ReceiverMemoSent(Sender: TObject; AddLine: String);
+    //FGetFindCriteria: Integer;
+    //FGetFindCriteria: Integer;
+    //FGetFindCriteria: Integer;
     procedure FMenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; CheckHeader: TCheckBox; NumItem: Integer);
     function  FGetFindCriteria: Integer;
- public
+
+  public
     { Public declarations }
     property FindCriteria: Integer read FGetFindCriteria;
     procedure ThreadOnTerminate(Sender: TObject);
- end;
+   // procedure MyProgress(var msg:TMessage);message MY_MESS;
+
+  end;
 
 var
   MainForm: TMainForm;
+  FindThread: ThreadFinder;
 
 implementation
 
@@ -104,7 +115,7 @@ begin
   //ShowMessage(IntToStr(FindCriteria));
   FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria);
   FindThread.OnTerminate := ThreadOnTerminate;
-  FindThread.OnMemoSent :=  ReceiverMemoSent;
+  //FindThread.
   FindThread.Resume;
   BtnStartFind.Enabled := False;
   BtnStopFind.Visible := True;
@@ -130,10 +141,10 @@ begin
   MniPlayPause.Enabled := False;
   stat1.Panels[2].Text := 'Отменен';
   BtnPlayPause.Caption := 'Приостановить';
-  FPictureGlyph.LoadFromFile(FCurDir+'\icons\control_pause_blue.bmp');
-  BtnPlayPause.Glyph := FPictureGlyph;
-  MniPlayPause.Caption := 'Приостановить';
-  MniPlayPause.Bitmap := FPictureGlyph;
+    FPictureGlyph.LoadFromFile(FCurDir+'\icons\control_pause_blue.bmp');
+    BtnPlayPause.Glyph := FPictureGlyph;
+    MniPlayPause.Caption := 'Приостановить';
+    MniPlayPause.Bitmap := FPictureGlyph;
 end;
 
 procedure TMainForm.BtnPlayPauseClick(Sender: TObject);
@@ -247,11 +258,6 @@ begin
   BtnStopFind.Click;
 end;
 
-procedure TMainForm.ReceiverMemoSent(Sender: TObject; AddLine: String);
-begin
-   MainForm.MmoDuplicateRezult.Lines.Add(AddLine);
-end;
-
 procedure TMainForm.MniPlayPauseClick(Sender: TObject);
 begin
   BtnPlayPause.Click;
@@ -353,7 +359,17 @@ begin
   MainForm.MniStopFind.Enabled := False;
   MainForm.MniPlayPause.Enabled := False;
   MainForm.ProgressBar.Visible := False;
-
+//  FindThread.FSearchStrLiRez.Free;
 end;
+
+
+
+//procedure TMainForm.MyProgress(var msg: TMessage);
+//begin
+//   case msg.WParam of
+//    0:begin ProgressBar.Max:=msg.LParam;ProgressBar.Position:=0; end;
+//    1:ProgressBar.Position:=msg.LParam;
+//   end;
+//end;
 
 end.

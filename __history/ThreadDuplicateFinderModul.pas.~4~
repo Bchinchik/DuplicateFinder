@@ -14,7 +14,6 @@ uses
 
 type
   TMemoSentEvent = procedure (Sender: TObject; AddLine: string) of object;
-  TLabelSentEvent = procedure (Sender: TObject; AddCount: string) of object;
   ThreadFinder = class(TThread)
   private
       FCountFile: Integer;
@@ -29,12 +28,11 @@ type
       procedure SetLabelCountFile;
       procedure SetLabelPath;
       procedure SetProgressBar;
-     // procedure AddLinesMemo2;
+      procedure AddLinesMemo2;
   protected
       procedure Execute; override;
   public
       OnMemoSent: TMemoSentEvent;
-      OnLabelSent: TLabelSentEvent;
       constructor Create(Param1: string; Param2: Integer);
  end;
 
@@ -88,12 +86,7 @@ begin
           if not MainForm.ChkBoxHeader.Checked then
           begin
             FBufStrMemoAdd := DirList[I] + '\' + SearchRec.Name;
-
-            if Assigned(OnMemoSent) then
-               Synchronize(procedure
-                            begin
-                             OnMemoSent(Self,FBufStrMemoAdd);
-                            end);
+            Synchronize(AddLinesMemo2);
           end;
           Inc( FCountFile );
           FDirSearchPath := DirList[I];
@@ -131,6 +124,11 @@ begin
   end;
 end;
 
+procedure ThreadFinder.AddLinesMemo2;
+begin
+  MainForm.MmoDuplicateRezult.Lines.Add(FBufStrMemoAdd);
+end;
+
 procedure ThreadFinder.Execute;
 begin
 
@@ -153,12 +151,7 @@ begin
   if FFindCriteria = 1 then
   begin
     FBufStrMemoAdd := 'Сортировка и визуализация списка найденных файлов, подождите...';
-    if Assigned(OnMemoSent) then
-       Synchronize(procedure
-                     begin
-                      OnMemoSent(Self,FBufStrMemoAdd);
-                     end);
-
+    Synchronize(AddLinesMemo2);
     FDuplIter := 0;
     J := 1;
     MainForm.ProgressBar.Max := FSearchStrLiRez.Count - 1;
@@ -175,48 +168,28 @@ begin
       if AnsiCompareText(CmprStrFist,CmprStrNext) = 0 then
       begin
         FBufStrMemoAdd := FSearchStrLiRez[FDuplIter];
-        if Assigned(OnMemoSent) then
-           Synchronize(procedure
-                        begin
-                          OnMemoSent(Self,FBufStrMemoAdd);
-                        end);
-
+        Synchronize(AddLinesMemo2);
         FBufStrMemoAdd := FSearchStrLiRez[FDuplIter + 1];
-
-        if Assigned(OnMemoSent) then
-           Synchronize(procedure
-                         begin
-                           OnMemoSent(Self,FBufStrMemoAdd);
-                         end);
+        Synchronize(AddLinesMemo2);
         J := FDuplIter + 2;
         CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-        CmprStrNext := Copy(FSearchStrLiRez[J],1,SubStrPosNext - 1);
+        CmprStrNext := Copy(FSearchStrLiRez[j],1,SubStrPosNext - 1);
         while AnsiCompareText(CmprStrFist,CmprStrNext) = 0 do
         //Matches more than one
         begin
           FBufStrMemoAdd := FSearchStrLiRez[J];
-          if Assigned(OnMemoSent) then
-             Synchronize(procedure
-                           begin
-                            OnMemoSent(Self,FBufStrMemoAdd);
-                           end);
-
+          Synchronize(AddLinesMemo2);
           Inc( J );
           CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-          CmprStrNext := Copy(FSearchStrLiRez[J],1,SubStrPosNext - 1);
+          CmprStrNext := Copy(FSearchStrLiRez[j],1,SubStrPosNext - 1);
         end;
           FBufStrMemoAdd := '____________________________________________________________________________________________________';
-
-          if Assigned(OnMemoSent) then
-             Synchronize(procedure
-                          begin
-                            OnMemoSent(Self,FBufStrMemoAdd);
-                          end);
+          Synchronize(AddLinesMemo2);
           Synchronize(SetProgressBar);
       end
       else
         Synchronize(SetProgressBar);
-
+     
         if FDuplIter < J then
            FDuplIter := J
         else
@@ -226,12 +199,11 @@ begin
   else
   begin
     FBufStrMemoAdd := 'Поиск Файлов по шаблону завершен.';
-    if Assigned(OnMemoSent) then
-       Synchronize(procedure
-                 begin
-                   OnMemoSent(Self,FBufStrMemoAdd);
-                 end);
-
+    Synchronize(procedure
+                begin
+                  OnMemoSent(Self,FBufStrMemoAdd);
+                end);
+    //Synchronize(AddLinesMemo2);
   end;
 end;
 

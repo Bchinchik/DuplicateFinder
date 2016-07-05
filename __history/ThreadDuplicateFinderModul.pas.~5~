@@ -88,12 +88,10 @@ begin
           if not MainForm.ChkBoxHeader.Checked then
           begin
             FBufStrMemoAdd := DirList[I] + '\' + SearchRec.Name;
-
-            if Assigned(OnMemoSent) then
-               Synchronize(procedure
-                            begin
-                             OnMemoSent(Self,FBufStrMemoAdd);
-                            end);
+            //Synchronize(AddLinesMemo2);
+            Synchronize(procedure  begin
+                                     OnMemoSent(Self,FBufStrMemoAdd);
+                                   end);
           end;
           Inc( FCountFile );
           FDirSearchPath := DirList[I];
@@ -131,6 +129,11 @@ begin
   end;
 end;
 
+{procedure ThreadFinder.AddLinesMemo2;
+begin
+  MainForm.MmoDuplicateRezult.Lines.Add(FBufStrMemoAdd);
+end;}
+
 procedure ThreadFinder.Execute;
 begin
 
@@ -158,7 +161,7 @@ begin
                      begin
                       OnMemoSent(Self,FBufStrMemoAdd);
                      end);
-
+    //Synchronize(AddLinesMemo2);
     FDuplIter := 0;
     J := 1;
     MainForm.ProgressBar.Max := FSearchStrLiRez.Count - 1;
@@ -180,9 +183,9 @@ begin
                         begin
                           OnMemoSent(Self,FBufStrMemoAdd);
                         end);
-
+        //Synchronize(AddLinesMemo2);
         FBufStrMemoAdd := FSearchStrLiRez[FDuplIter + 1];
-
+        //Synchronize(AddLinesMemo2);
         if Assigned(OnMemoSent) then
            Synchronize(procedure
                          begin
@@ -190,7 +193,7 @@ begin
                          end);
         J := FDuplIter + 2;
         CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-        CmprStrNext := Copy(FSearchStrLiRez[J],1,SubStrPosNext - 1);
+        CmprStrNext := Copy(FSearchStrLiRez[j],1,SubStrPosNext - 1);
         while AnsiCompareText(CmprStrFist,CmprStrNext) = 0 do
         //Matches more than one
         begin
@@ -200,13 +203,13 @@ begin
                            begin
                             OnMemoSent(Self,FBufStrMemoAdd);
                            end);
-
+          //Synchronize(AddLinesMemo2);
           Inc( J );
           CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-          CmprStrNext := Copy(FSearchStrLiRez[J],1,SubStrPosNext - 1);
+          CmprStrNext := Copy(FSearchStrLiRez[j],1,SubStrPosNext - 1);
         end;
           FBufStrMemoAdd := '____________________________________________________________________________________________________';
-
+          //Synchronize(AddLinesMemo2);
           if Assigned(OnMemoSent) then
              Synchronize(procedure
                           begin
@@ -216,7 +219,7 @@ begin
       end
       else
         Synchronize(SetProgressBar);
-
+     
         if FDuplIter < J then
            FDuplIter := J
         else
@@ -231,7 +234,7 @@ begin
                  begin
                    OnMemoSent(Self,FBufStrMemoAdd);
                  end);
-
+    //Synchronize(AddLinesMemo2);
   end;
 end;
 

@@ -80,7 +80,7 @@ type
     FCurDir: string;
     FPictureGlyph: TBitmap;
     FindThread: ThreadFinder;
-    procedure ReceiverMemoSent(Sender: TObject; AddLine: String);
+    procedure ReceiverSMSSent(Sender: TObject; AResult: string);
     procedure FMenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; CheckHeader: TCheckBox; NumItem: Integer);
     function  FGetFindCriteria: Integer;
  public
@@ -104,7 +104,7 @@ begin
   //ShowMessage(IntToStr(FindCriteria));
   FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria);
   FindThread.OnTerminate := ThreadOnTerminate;
-  FindThread.OnMemoSent :=  ReceiverMemoSent;
+  FindThread.OnSMSSent :=  ReceiverSMSSent;
   FindThread.Resume;
   BtnStartFind.Enabled := False;
   BtnStopFind.Visible := True;
@@ -247,9 +247,9 @@ begin
   BtnStopFind.Click;
 end;
 
-procedure TMainForm.ReceiverMemoSent(Sender: TObject; AddLine: String);
+procedure TMainForm.ReceiverSMSSent(Sender: TObject; AResult: string);
 begin
-   MainForm.MmoDuplicateRezult.Lines.Add(AddLine);
+   MainForm.MmoDuplicateRezult.Lines.Add(AResult);
 end;
 
 procedure TMainForm.MniPlayPauseClick(Sender: TObject);
