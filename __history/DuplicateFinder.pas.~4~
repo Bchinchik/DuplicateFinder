@@ -56,8 +56,6 @@ type
     ChkHidden: TCheckBox;
     ChkSystem: TCheckBox;
     ChkArchive: TCheckBox;
-    lbl2: TLabel;
-    TmrFileCounter: TTimer;
     procedure BtnStartFindClick(Sender: TObject);
     procedure BtnStopFindClick(Sender: TObject);
     procedure BtnPlayPauseClick(Sender: TObject);
@@ -77,14 +75,12 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure MniAboutClick(Sender: TObject);
     procedure MniDuplicateByDateClick(Sender: TObject);
-    procedure TmrFileCounterTimer(Sender: TObject);
   private
     { Private declarations }
     FCurDir: string;
     FPictureGlyph: TBitmap;
     FindThread: ThreadFinder;
     procedure ReceiverMemoSent(Sender: TObject; AddLine: String);
-    procedure ReceiverLabelCountSent(Sender: TObject; AddLine: String);
     procedure FMenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; CheckHeader: TCheckBox; NumItem: Integer);
     function  FGetFindCriteria: Integer;
  public
@@ -109,10 +105,7 @@ begin
   FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria);
   FindThread.OnTerminate := ThreadOnTerminate;
   FindThread.OnMemoSent :=  ReceiverMemoSent;
-  FindThread.OnLabelCountSent := ReceiverLabelCountSent;
-  FindThread.AFCStopFlag := False;
   FindThread.Resume;
-  TmrFileCounter.Enabled := True;
   BtnStartFind.Enabled := False;
   BtnStopFind.Visible := True;
   BtnPlayPause.Visible := True;
@@ -127,8 +120,6 @@ end;
 
 procedure TMainForm.BtnStopFindClick(Sender: TObject);
 begin
-  //FindThread.AFCStopFlag := True;
-  TmrFileCounter.Enabled := False;
   FindThread.Terminate;
   MmoDuplicateRezult.Lines.Clear;
   ProgressBar.Visible := False;
@@ -256,14 +247,9 @@ begin
   BtnStopFind.Click;
 end;
 
-procedure TMainForm.ReceiverLabelCountSent(Sender: TObject; AddLine: String);
-begin
-  Stat1.Panels[1].Text :=AddLine;
-end;
-
 procedure TMainForm.ReceiverMemoSent(Sender: TObject; AddLine: String);
 begin
-   MmoDuplicateRezult.Lines.Add(AddLine);
+   MainForm.MmoDuplicateRezult.Lines.Add(AddLine);
 end;
 
 procedure TMainForm.MniPlayPauseClick(Sender: TObject);
@@ -360,9 +346,6 @@ end;
 
 procedure TMainForm.ThreadOnTerminate(Sender: TObject);
 begin
-
-  TmrFileCounter.Enabled := False;
-
   MainForm.stat1.Panels[2].Text := 'Завершен';
   MainForm.BtnStartFind.Enabled := True;
   MainForm.BtnStopFind.Visible := False;
@@ -370,19 +353,6 @@ begin
   MainForm.MniStopFind.Enabled := False;
   MainForm.MniPlayPause.Enabled := False;
   MainForm.ProgressBar.Visible := False;
-
-
-end;
-
-
-
-procedure TMainForm.TmrFileCounterTimer(Sender: TObject);
-begin
-  //if (FindThread<>nil) then
-  //if (not(FindThread.AFCStopFlag)) then
-     Stat1.Panels[1].Text := IntToStr(FindThread.AllFileCounter)
-  //else
-   //    Self.Enabled := False;
 
 end;
 

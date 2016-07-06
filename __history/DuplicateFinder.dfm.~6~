@@ -1365,7 +1365,7 @@ object MainForm: TMainForm
   object TmrFileCounter: TTimer
     Enabled = False
     Interval = 10
-    OnTimer = TmrFileCounterTimer
+    OnTimer = tmr1Timer
     Left = 440
     Top = 16
   end

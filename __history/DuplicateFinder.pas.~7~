@@ -110,7 +110,6 @@ begin
   FindThread.OnTerminate := ThreadOnTerminate;
   FindThread.OnMemoSent :=  ReceiverMemoSent;
   FindThread.OnLabelCountSent := ReceiverLabelCountSent;
-  FindThread.AFCStopFlag := False;
   FindThread.Resume;
   TmrFileCounter.Enabled := True;
   BtnStartFind.Enabled := False;
@@ -362,7 +361,6 @@ procedure TMainForm.ThreadOnTerminate(Sender: TObject);
 begin
 
   TmrFileCounter.Enabled := False;
-
   MainForm.stat1.Panels[2].Text := 'Завершен';
   MainForm.BtnStartFind.Enabled := True;
   MainForm.BtnStopFind.Visible := False;
@@ -378,12 +376,10 @@ end;
 
 procedure TMainForm.TmrFileCounterTimer(Sender: TObject);
 begin
-  //if (FindThread<>nil) then
-  //if (not(FindThread.AFCStopFlag)) then
-     Stat1.Panels[1].Text := IntToStr(FindThread.AllFileCounter)
-  //else
-   //    Self.Enabled := False;
-
+  if FindThread.AFCStopFlag then
+     Self.Enabled := False
+  else
+  Stat1.Panels[1].Text := IntToStr(FindThread.AllFileCounter);
 end;
 
 end.

@@ -77,7 +77,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure MniAboutClick(Sender: TObject);
     procedure MniDuplicateByDateClick(Sender: TObject);
-    procedure TmrFileCounterTimer(Sender: TObject);
+    procedure tmr1Timer(Sender: TObject);
   private
     { Private declarations }
     FCurDir: string;
@@ -110,7 +110,6 @@ begin
   FindThread.OnTerminate := ThreadOnTerminate;
   FindThread.OnMemoSent :=  ReceiverMemoSent;
   FindThread.OnLabelCountSent := ReceiverLabelCountSent;
-  FindThread.AFCStopFlag := False;
   FindThread.Resume;
   TmrFileCounter.Enabled := True;
   BtnStartFind.Enabled := False;
@@ -361,8 +360,7 @@ end;
 procedure TMainForm.ThreadOnTerminate(Sender: TObject);
 begin
 
-  TmrFileCounter.Enabled := False;
-
+  //FindThread.Free;
   MainForm.stat1.Panels[2].Text := 'Завершен';
   MainForm.BtnStartFind.Enabled := True;
   MainForm.BtnStopFind.Visible := False;
@@ -371,19 +369,14 @@ begin
   MainForm.MniPlayPause.Enabled := False;
   MainForm.ProgressBar.Visible := False;
 
-
 end;
 
-
-
-procedure TMainForm.TmrFileCounterTimer(Sender: TObject);
+procedure TMainForm.tmr1Timer(Sender: TObject);
 begin
-  //if (FindThread<>nil) then
-  //if (not(FindThread.AFCStopFlag)) then
-     Stat1.Panels[1].Text := IntToStr(FindThread.AllFileCounter)
-  //else
-   //    Self.Enabled := False;
-
+  if FindThread.AFCStopFlag then
+     Self.Enabled := False
+  else
+  Stat1.Panels[1].Text := IntToStr(FindThread.AllFileCounter);
 end;
 
 end.

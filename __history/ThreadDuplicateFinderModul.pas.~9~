@@ -240,7 +240,6 @@ begin
                  end);}
 
   end;
-  AFCStopFlag := True;
 end;
 
 
