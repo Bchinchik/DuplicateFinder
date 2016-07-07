@@ -14,38 +14,39 @@ uses
 
 type
   TSentEvent = procedure (Sender: TObject; AddLine: string) of object;
-  //TLabelSentEvent = procedure (Sender: TObject; AddCount: string) of object;
   ThreadFinder = class(TThread)
-  private
-      //FCountFile: Integer;
+    private
       FDuplIter: Integer;
       FDirSearchPath: string;
       FBufStrMemoAdd: string;
-      FSearchStrLiRez: TStringList;
+      FFileList: TStringList;
       FStartFolder: string;
+
       FFindCriteria : Integer;
+      FFindMask: string;
       procedure GetDirFilesList;
       procedure GetDuplicateFiles;
-      //procedure SetLabelCountFile;
-      procedure SetLabelPath;
-      procedure SetProgressBar;
+     // procedure SetProgressBar;
       procedure ShellSynchronize(AObject: TSentEvent  ; BufStr: string);
-     // procedure AddLinesMemo2;
-  protected
+    protected
       procedure Execute; override;
-  public
+    public
       AllFileCounter: Integer;
-      AFCStopFlag: Boolean;
+      ProgressMax: Integer;
+      ProgressCur: Integer;
+      StartFlag: Boolean;
+            a,b:string;
+    //  AFCStopFlag: Boolean;
+      PathScaning: string;
       OnMemoSent: TSentEvent;
       OnLabelCountSent: TSentEvent;
-      constructor Create(Param1: string; Param2: Integer);
+      constructor Create(StartFolder: string; FindCriteria: Integer; FindMask: string);
  end;
 
 implementation
 
-uses
-  DuplicateFinder;
-
+//uses
+//  DuplicateFinder;
 
 { ThreadFinder }
 constructor ThreadFinder.Create;
@@ -53,9 +54,9 @@ begin
   inherited Create(True);
   FreeOnTerminate := True;
   Self.Priority := tpNormal;
-  FStartFolder := Param1;
-  FFindCriteria := Param2;
-
+  FStartFolder := StartFolder;
+  FFindCriteria := FindCriteria;
+  FFindMask := FindMask;
 end;
 
 procedure ThreadFinder.GetDirFilesList;
@@ -85,34 +86,21 @@ begin
       else
       if (SearchRec.Name[1] <> '.') then
       begin
-        if MatchesMask(SearchRec.Name,MainForm.EdtFindMask.Text) then
+        if MatchesMask(SearchRec.Name,FFindMask) then
         begin
-          FSearchStrLiRez.Add(SearchRec.Name + '   |   Путь:  ' +
+          FFileList.Add(SearchRec.Name + '   |   Путь:  ' +
           DirList[I] + '\' + SearchRec.Name);
-          if FFindCriteria<>1 then
+          if FFindCriteria = 8 then
           begin
             FBufStrMemoAdd := DirList[I] + '\' + SearchRec.Name;
             ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-            {if Assigned(OnMemoSent) then
-               Synchronize(procedure
-                            begin
-                             OnMemoSent(Self,FBufStrMemoAdd);
-                            end);}
+
           end;
           Inc( AllFileCounter );
-          //Counter := FCountFile;
-          FDirSearchPath := DirList[I];
+          PathScaning := DirList[I];
 
-          //Synchronize(SetLabelCountFile);
-         // ShellSynchronize(OnLabelCountSent,IntToStr(FCountFile));
-          {if Assigned(OnLabelCountSent) then
-           Synchronize(procedure
-                        begin
-                          OnLabelCountSent(Self,IntToStr(FCountFile));
-                        end);}
         end;
 
-        Synchronize(SetLabelPath);
       end;
       until FindNext(SearchRec) <> 0;
     finally
@@ -121,20 +109,10 @@ begin
     end;
   end;
   DirList.Free;
-  AFCStopFlag := True;
+ // AFCStopFlag := True;
 end;
 
-//procedure ThreadFinder.SetLabelCountFile;
-//begin
-//  MainForm.stat1.Panels[1].Text := IntToStr(FCountFile);
-//end;
-
-procedure ThreadFinder.SetLabelPath;
-begin
-  MainForm.stat1.Panels[0].Text := FDirSearchPath;
-end;
-
-procedure ThreadFinder.SetProgressBar;
+{procedure ThreadFinder.SetProgressBar;
 begin
   with MainForm.ProgressBar do
   begin
@@ -142,7 +120,7 @@ begin
     Visible := True;
     Position := FDuplIter;
   end;
-end;
+end;}
 
 procedure ThreadFinder.ShellSynchronize(AObject: TSentEvent; BufStr: string);
 begin
@@ -156,11 +134,11 @@ end;
 procedure ThreadFinder.Execute;
 begin
 
-  FSearchStrLiRez := TStringList.Create;
+  FFileList := TStringList.Create;
   GetDirFilesList;
-  FSearchStrLiRez.Sort;
+  FFileList.Sort;
   GetDuplicateFiles;
-  FSearchStrLiRez.Free;
+  FFileList.Free;
 
 end;
 
@@ -174,73 +152,69 @@ procedure ThreadFinder.GetDuplicateFiles;
 begin
   if FFindCriteria = 1 then
   begin
-    //FBufStrMemoAdd := 'Сортировка и визуализация списка найденных файлов, подождите...';
-    //ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
     FDuplIter := 0;
     J := 1;
-    MainForm.ProgressBar.Max := FSearchStrLiRez.Count - 1;
-    while FDuplIter < FSearchStrLiRez.Count - 2 do
+    ProgressCur := FDuplIter;
+    ProgressMax := FFileList.Count - 1;
+    StartFlag := True;
+    a:=IntToStr(FFileList.Count - 1);
+    //MainForm.ProgressBar.Max := FFileList.Count - 1;
+    while FDuplIter < FFileList.Count - 1 do
     if Self.Terminated then
       Break
     else
     begin
-      SubStrPosFirst := AnsiPos(SubStr,FSearchStrLiRez[FDuplIter]);
-      SubStrPosNext := AnsiPos(SubStr,FSearchStrLiRez[FDuplIter + 1]);
-      CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-      CmprStrNext := Copy(FSearchStrLiRez[FDuplIter + 1],1,SubStrPosNext - 1);
+      SubStrPosFirst := AnsiPos(SubStr,FFileList[FDuplIter]);
+      SubStrPosNext := AnsiPos(SubStr,FFileList[FDuplIter + 1]);
+      CmprStrFist := Copy(FFileList[FDuplIter],1,SubStrPosFirst - 1);
+      CmprStrNext := Copy(FFileList[FDuplIter + 1],1,SubStrPosNext - 1);
       //First string = Next string = Duplicate
       if AnsiCompareText(CmprStrFist,CmprStrNext) = 0 then
       begin
-        FBufStrMemoAdd := FSearchStrLiRez[FDuplIter];
+        FBufStrMemoAdd := FFileList[FDuplIter];
         ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
 
-
-        FBufStrMemoAdd := FSearchStrLiRez[FDuplIter + 1];
+        FBufStrMemoAdd := FFileList[FDuplIter + 1];
         ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
 
         J := FDuplIter + 2;
-        CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-        CmprStrNext := Copy(FSearchStrLiRez[J],1,SubStrPosNext - 1);
+        CmprStrFist := Copy(FFileList[FDuplIter],1,SubStrPosFirst - 1);
+        CmprStrNext := Copy(FFileList[J],1,SubStrPosNext - 1);
         while AnsiCompareText(CmprStrFist,CmprStrNext) = 0 do
         //Matches more than one
         begin
-          FBufStrMemoAdd := FSearchStrLiRez[J];
+          FBufStrMemoAdd := FFileList[J];
           ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-
           Inc( J );
-          CmprStrFist := Copy(FSearchStrLiRez[FDuplIter],1,SubStrPosFirst - 1);
-          CmprStrNext := Copy(FSearchStrLiRez[J],1,SubStrPosNext - 1);
+          ProgressCur := J;
+          CmprStrFist := Copy(FFileList[FDuplIter],1,SubStrPosFirst - 1);
+          CmprStrNext := Copy(FFileList[J],1,SubStrPosNext - 1);
         end;
           FBufStrMemoAdd := '____________________________________________________________________________________________________';
           ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-          {if Assigned(OnMemoSent) then
-             Synchronize(procedure
-                          begin
-                            OnMemoSent(Self,FBufStrMemoAdd);
-                          end);}
-          Synchronize(SetProgressBar);
-      end
-      else
-        Synchronize(SetProgressBar);
+
+         // Synchronize(SetProgressBar);
+      end;
+      //else
+       // Synchronize(SetProgressBar);
 
         if FDuplIter < J then
            FDuplIter := J
         else
+          begin
            Inc( FDuplIter );
+           Inc(ProgressCur);
+           b:=IntToStr(FDuplIter);
+          end;
     end;
   end
   else
   begin
     FBufStrMemoAdd := 'Поиск Файлов по шаблону завершен.';
     ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-    {if Assigned(OnMemoSent) then
-       Synchronize(procedure
-                 begin
-                   OnMemoSent(Self,FBufStrMemoAdd);
-                 end);}
 
   end;
-  AFCStopFlag := True;
+ // AFCStopFlag := True;
 end;
 
 

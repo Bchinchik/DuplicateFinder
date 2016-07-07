@@ -59,10 +59,6 @@ type
     TmrFileCounter: TTimer;
     TmrPathScaning: TTimer;
     TmrProgress: TTimer;
-    lbl2: TLabel;
-    lbl3: TLabel;
-    lbl4: TLabel;
-    lbl5: TLabel;
     procedure BtnStartFindClick(Sender: TObject);
     procedure BtnStopFindClick(Sender: TObject);
     procedure BtnPlayPauseClick(Sender: TObject);
@@ -113,16 +109,15 @@ begin
   MmoDuplicateRezult.Lines.Clear;
   ProgressBar.Position := 0;
   //ShowMessage(IntToStr(FindCriteria));
-  FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria,EdtFindMask.Text);
+  FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria);
   FindThread.OnTerminate := ThreadOnTerminate;
   FindThread.OnMemoSent :=  ReceiverMemoSent;
   FindThread.OnLabelCountSent := ReceiverLabelCountSent;
-  FindThread.StartFlag := False;
   //FindThread.AFCStopFlag := False;
   FindThread.Resume;
   TmrFileCounter.Enabled := True;
   TmrPathScaning.Enabled := True;
-  TmrProgress.Enabled := True;
+ // TmrProgress.Enabled := True;
   BtnStartFind.Enabled := False;
   BtnStopFind.Visible := True;
   BtnPlayPause.Visible := True;
@@ -140,7 +135,7 @@ begin
   //FindThread.AFCStopFlag := True;
   TmrFileCounter.Enabled := False;
   TmrPathScaning.Enabled := False;
-  TmrProgress.Enabled := False;
+  //TmrProgress.Enabled := False;
   FindThread.Terminate;
 
   MmoDuplicateRezult.Lines.Clear;
@@ -366,7 +361,6 @@ begin
  if ChkLstBoxFindCriteria.Checked[0] and (not(ChkLstBoxFindCriteria.Checked[1])) and ((ChkLstBoxFindCriteria.Checked[2]))  then Result := 5;
  if ChkLstBoxFindCriteria.Checked[1] and ((ChkLstBoxFindCriteria.Checked[2])) and (not(ChkLstBoxFindCriteria.Checked[0]))  then Result := 6;
  if ChkLstBoxFindCriteria.Checked[0] and ((ChkLstBoxFindCriteria.Checked[1])) and ((ChkLstBoxFindCriteria.Checked[2]))  then Result := 7;
- if not(ChkLstBoxFindCriteria.Checked[0]) and (not(ChkLstBoxFindCriteria.Checked[1])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 8;
 
 end;
 
@@ -377,7 +371,7 @@ begin
 
   TmrFileCounter.Enabled := False;
   TmrPathScaning.Enabled := False;
-  TmrProgress.Enabled := False;
+  //  TmrProgress.Enabled := False;
   FindThread := nil;
   MainForm.stat1.Panels[2].Text := 'Завершен';
   MainForm.BtnStartFind.Enabled := True;
@@ -415,17 +409,10 @@ begin
   if (FindThread<>nil) then
     with ProgressBar do
   begin
-    if FindThread.StartFlag then
-       begin
-        if Visible = False then
-           Visible := True;
-           Position := FindThread.ProgressCur;
-           Max := FindThread.ProgressMax;
-           lbl2.Caption := IntToStr(FindThread.ProgressMax);
-           lbl3.Caption := IntToStr(FindThread.ProgressCur);
-           lbl4.Caption := (FindThread.a);
-           lbl5.Caption := (FindThread.b);
-       end;
+    if Visible = False then
+    Visible := True;
+//    Position := FindThread.ProgressCur;
+ //   Max := FindThread.ProgressMax;
   end
   else
        Self.Enabled := False;

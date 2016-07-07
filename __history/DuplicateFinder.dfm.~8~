@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 140
   AutoSize = True
   Caption = #1055#1086#1080#1089#1082' '#1076#1091#1073#1083#1080#1082#1072#1090#1086#1074' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
-  ClientHeight = 655
+  ClientHeight = 661
   ClientWidth = 678
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -191,7 +191,7 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 8
+    Left = 4
     Top = 0
     Width = 152
     Height = 24
@@ -205,7 +205,7 @@ object MainForm: TMainForm
   end
   object Label2: TLabel
     Left = 0
-    Top = 309
+    Top = 315
     Width = 159
     Height = 20
     Caption = #1052#1072#1089#1082#1072' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072':'
@@ -218,7 +218,7 @@ object MainForm: TMainForm
   end
   object Label3: TLabel
     Left = 4
-    Top = 30
+    Top = 36
     Width = 48
     Height = 24
     Caption = #1055#1091#1090#1100':'
@@ -231,7 +231,7 @@ object MainForm: TMainForm
   end
   object Label4: TLabel
     Left = 15
-    Top = 410
+    Top = 416
     Width = 88
     Height = 24
     Caption = 'D:\'#1055#1086#1090#1086#1082#1080
@@ -243,47 +243,8 @@ object MainForm: TMainForm
     ParentFont = False
   end
   object lbl2: TLabel
-    Left = 272
-    Top = 0
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl3: TLabel
-    Left = 272
-    Top = 30
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl4: TLabel
-    Left = 356
-    Top = 0
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl5: TLabel
-    Left = 356
-    Top = 28
+    Left = 490
+    Top = 8
     Width = 10
     Height = 24
     Caption = '0'
@@ -296,7 +257,7 @@ object MainForm: TMainForm
   end
   object BtnStartFind: TBitBtn
     Left = 2
-    Top = 345
+    Top = 351
     Width = 147
     Height = 46
     Caption = #1053#1072#1095#1072#1090#1100' '#1055#1086#1080#1089#1082
@@ -410,7 +371,7 @@ object MainForm: TMainForm
   end
   object BtnStopFind: TBitBtn
     Left = 338
-    Top = 345
+    Top = 351
     Width = 147
     Height = 46
     Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1055#1086#1080#1089#1082
@@ -525,7 +486,7 @@ object MainForm: TMainForm
   end
   object BtnPlayPause: TBitBtn
     Left = 506
-    Top = 345
+    Top = 351
     Width = 147
     Height = 46
     Caption = #1055#1088#1080#1086#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -541,7 +502,7 @@ object MainForm: TMainForm
   end
   object EdtFindMask: TEdit
     Left = 153
-    Top = 301
+    Top = 307
     Width = 193
     Height = 32
     Font.Charset = DEFAULT_CHARSET
@@ -555,7 +516,7 @@ object MainForm: TMainForm
   end
   object DirectoryListBox1: TDirectoryListBox
     Left = 4
-    Top = 86
+    Top = 92
     Width = 145
     Height = 209
     FileList = FileListBox1
@@ -564,7 +525,7 @@ object MainForm: TMainForm
   end
   object FileListBox1: TFileListBox
     Left = 153
-    Top = 62
+    Top = 68
     Width = 193
     Height = 233
     FileType = [ftHidden, ftSystem, ftNormal]
@@ -573,7 +534,7 @@ object MainForm: TMainForm
   end
   object DriveComboBox1: TDriveComboBox
     Left = 4
-    Top = 62
+    Top = 68
     Width = 145
     Height = 19
     DirList = DirectoryListBox1
@@ -581,7 +542,7 @@ object MainForm: TMainForm
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 633
+    Top = 639
     Width = 678
     Height = 22
     Panels = <
@@ -600,7 +561,7 @@ object MainForm: TMainForm
   end
   object grp1: TGroupBox
     Left = 348
-    Top = 58
+    Top = 64
     Width = 302
     Height = 275
     TabOrder = 8
@@ -703,7 +664,7 @@ object MainForm: TMainForm
   end
   object MmoDuplicateRezult: TMemo
     Left = 9
-    Top = 459
+    Top = 465
     Width = 649
     Height = 97
     Lines.Strings = (
@@ -713,7 +674,7 @@ object MainForm: TMainForm
   end
   object ProgressBar: TProgressBar
     Left = 9
-    Top = 572
+    Top = 578
     Width = 649
     Height = 33
     BorderWidth = 2
@@ -722,7 +683,7 @@ object MainForm: TMainForm
   end
   object BtnExit: TBitBtn
     Left = 172
-    Top = 345
+    Top = 351
     Width = 147
     Height = 46
     Caption = #1042#1099#1093#1086#1076
@@ -838,7 +799,7 @@ object MainForm: TMainForm
   end
   object ChkLstBoxFindCriteria: TCheckListBox
     Left = 353
-    Top = 106
+    Top = 112
     Width = 289
     Height = 67
     Color = clMoneyGreen
@@ -1412,14 +1373,7 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 5
     OnTimer = TmrPathScaningTimer
-    Left = 520
-    Top = 16
-  end
-  object TmrProgress: TTimer
-    Enabled = False
-    Interval = 1
-    OnTimer = TmrProgressTimer
-    Left = 600
+    Left = 552
     Top = 16
   end
 end

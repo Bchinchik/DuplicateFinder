@@ -268,32 +268,6 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
   end
-  object lbl4: TLabel
-    Left = 356
-    Top = 0
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl5: TLabel
-    Left = 356
-    Top = 28
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
   object BtnStartFind: TBitBtn
     Left = 2
     Top = 345
@@ -1417,7 +1391,7 @@ object MainForm: TMainForm
   end
   object TmrProgress: TTimer
     Enabled = False
-    Interval = 1
+    Interval = 5
     OnTimer = TmrProgressTimer
     Left = 600
     Top = 16
