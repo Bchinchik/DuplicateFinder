@@ -1,11 +1,11 @@
 object MainForm: TMainForm
   Left = 465
   Top = 140
-  AutoSize = True
   Caption = #1055#1086#1080#1089#1082' '#1076#1091#1073#1083#1080#1082#1072#1090#1086#1074' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
-  ClientHeight = 655
-  ClientWidth = 678
+  ClientHeight = 664
+  ClientWidth = 702
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -186,6 +186,7 @@ object MainForm: TMainForm
   Menu = MainMenu
   OldCreateOrder = False
   OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
@@ -204,7 +205,7 @@ object MainForm: TMainForm
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 0
+    Left = 8
     Top = 309
     Width = 159
     Height = 20
@@ -217,7 +218,7 @@ object MainForm: TMainForm
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 4
+    Left = 8
     Top = 30
     Width = 48
     Height = 24
@@ -230,8 +231,8 @@ object MainForm: TMainForm
     ParentFont = False
   end
   object Label4: TLabel
-    Left = 15
-    Top = 410
+    Left = 8
+    Top = 390
     Width = 88
     Height = 24
     Caption = 'D:\'#1055#1086#1090#1086#1082#1080
@@ -242,62 +243,21 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
   end
-  object lbl2: TLabel
-    Left = 272
-    Top = 0
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl3: TLabel
-    Left = 272
-    Top = 30
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl4: TLabel
-    Left = 356
-    Top = 0
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lbl5: TLabel
-    Left = 356
-    Top = 28
-    Width = 10
-    Height = 24
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
+  object GProgress: TGauge
+    Left = 8
+    Top = 607
+    Width = 642
+    Height = 29
+    Color = clBlack
+    ForeColor = clMoneyGreen
+    ParentColor = False
+    Progress = 0
+    Visible = False
   end
   object BtnStartFind: TBitBtn
-    Left = 2
+    Left = 7
     Top = 345
-    Width = 147
+    Width = 155
     Height = 46
     Caption = #1053#1072#1095#1072#1090#1100' '#1055#1086#1080#1089#1082
     Font.Charset = DEFAULT_CHARSET
@@ -409,9 +369,9 @@ object MainForm: TMainForm
     OnClick = BtnStartFindClick
   end
   object BtnStopFind: TBitBtn
-    Left = 338
+    Left = 332
     Top = 345
-    Width = 147
+    Width = 155
     Height = 46
     Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1055#1086#1080#1089#1082
     Font.Charset = DEFAULT_CHARSET
@@ -524,9 +484,9 @@ object MainForm: TMainForm
     OnClick = BtnStopFindClick
   end
   object BtnPlayPause: TBitBtn
-    Left = 506
+    Left = 495
     Top = 345
-    Width = 147
+    Width = 155
     Height = 46
     Caption = #1055#1088#1080#1086#1089#1090#1072#1085#1086#1074#1080#1090#1100
     Font.Charset = DEFAULT_CHARSET
@@ -540,7 +500,7 @@ object MainForm: TMainForm
     OnClick = BtnPlayPauseClick
   end
   object EdtFindMask: TEdit
-    Left = 153
+    Left = 160
     Top = 301
     Width = 193
     Height = 32
@@ -554,16 +514,16 @@ object MainForm: TMainForm
     Text = '*'
   end
   object DirectoryListBox1: TDirectoryListBox
-    Left = 4
+    Left = 8
     Top = 86
-    Width = 145
+    Width = 146
     Height = 209
     FileList = FileListBox1
     TabOrder = 4
     OnChange = DirectoryListBox1Change
   end
   object FileListBox1: TFileListBox
-    Left = 153
+    Left = 160
     Top = 62
     Width = 193
     Height = 233
@@ -572,18 +532,19 @@ object MainForm: TMainForm
     TabOrder = 5
   end
   object DriveComboBox1: TDriveComboBox
-    Left = 4
+    Left = 8
     Top = 62
-    Width = 145
+    Width = 146
     Height = 19
     DirList = DirectoryListBox1
     TabOrder = 6
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 633
-    Width = 678
+    Top = 642
+    Width = 702
     Height = 22
+    DoubleBuffered = True
     Panels = <
       item
         Text = #1058#1077#1082#1091#1097#1072#1103' '#1087#1072#1087#1082#1072
@@ -597,26 +558,15 @@ object MainForm: TMainForm
         Text = #1057#1090#1072#1088#1090
         Width = 80
       end>
+    ParentDoubleBuffered = False
+    ExplicitTop = 691
   end
   object grp1: TGroupBox
-    Left = 348
+    Left = 357
     Top = 58
-    Width = 302
-    Height = 275
+    Width = 293
+    Height = 237
     TabOrder = 8
-    object lbl1: TLabel
-      Left = 24
-      Top = 130
-      Width = 206
-      Height = 24
-      Caption = #1057' '#1091#1095#1077#1090#1086#1084' '#1072#1090#1088#1080#1073#1091#1090#1086#1074':'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
     object ChkBoxHeader: TCheckBox
       Left = 8
       Top = 16
@@ -632,98 +582,11 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
     end
-    object ChkReadOnly: TCheckBox
-      Left = 16
-      Top = 170
-      Width = 209
-      Height = 26
-      Caption = #1058#1086#1083#1100#1082#1086' '#1095#1090#1077#1085#1080#1077
-      Checked = True
-      Enabled = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      State = cbChecked
-      TabOrder = 1
-    end
-    object ChkHidden: TCheckBox
-      Left = 16
-      Top = 194
-      Width = 209
-      Height = 26
-      Caption = #1057#1082#1088#1099#1090#1099#1077
-      Checked = True
-      Enabled = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      State = cbChecked
-      TabOrder = 2
-    end
-    object ChkSystem: TCheckBox
-      Left = 16
-      Top = 218
-      Width = 209
-      Height = 26
-      Caption = #1057#1080#1089#1090#1077#1084#1085#1099#1077
-      Checked = True
-      Enabled = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      State = cbChecked
-      TabOrder = 3
-    end
-    object ChkArchive: TCheckBox
-      Left = 16
-      Top = 242
-      Width = 201
-      Height = 26
-      Caption = #1040#1088#1093#1080#1074#1085#1099#1077
-      Checked = True
-      Enabled = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      State = cbChecked
-      TabOrder = 4
-    end
-  end
-  object MmoDuplicateRezult: TMemo
-    Left = 9
-    Top = 459
-    Width = 649
-    Height = 97
-    Lines.Strings = (
-      '')
-    ScrollBars = ssBoth
-    TabOrder = 9
-  end
-  object ProgressBar: TProgressBar
-    Left = 9
-    Top = 572
-    Width = 649
-    Height = 33
-    BorderWidth = 2
-    TabOrder = 10
-    Visible = False
   end
   object BtnExit: TBitBtn
-    Left = 172
+    Left = 170
     Top = 345
-    Width = 147
+    Width = 155
     Height = 46
     Caption = #1042#1099#1093#1086#1076
     Font.Charset = DEFAULT_CHARSET
@@ -833,13 +696,13 @@ object MainForm: TMainForm
     Margin = 5
     ParentFont = False
     Spacing = 17
-    TabOrder = 11
+    TabOrder = 9
     OnClick = BtnExitClick
   end
   object ChkLstBoxFindCriteria: TCheckListBox
-    Left = 353
+    Left = 361
     Top = 106
-    Width = 289
+    Width = 285
     Height = 67
     Color = clMoneyGreen
     Enabled = False
@@ -854,7 +717,20 @@ object MainForm: TMainForm
       #1057' '#1091#1095#1077#1090#1086#1084' '#1088#1072#1079#1084#1077#1088#1072' '#1092#1072#1081#1083#1086#1074
       #1057' '#1091#1095#1077#1090#1086#1084' '#1087#1086#1089#1083'. '#1076#1072#1090#1099' '#1084#1086#1076#1080#1092#1080#1082#1072#1094#1080#1080)
     ParentFont = False
-    TabOrder = 12
+    TabOrder = 10
+  end
+  object Sg1: TStringGrid
+    Left = 8
+    Top = 414
+    Width = 642
+    Height = 187
+    DoubleBuffered = True
+    DrawingStyle = gdsClassic
+    FixedColor = clMoneyGreen
+    RowCount = 2
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect, goThumbTracking]
+    ParentDoubleBuffered = False
+    TabOrder = 11
   end
   object MainMenu: TMainMenu
     Left = 224
@@ -1400,26 +1276,5 @@ object MainForm: TMainForm
         OnClick = MniAboutClick
       end
     end
-  end
-  object TmrFileCounter: TTimer
-    Enabled = False
-    Interval = 5
-    OnTimer = TmrFileCounterTimer
-    Left = 440
-    Top = 16
-  end
-  object TmrPathScaning: TTimer
-    Enabled = False
-    Interval = 5
-    OnTimer = TmrPathScaningTimer
-    Left = 520
-    Top = 16
-  end
-  object TmrProgress: TTimer
-    Enabled = False
-    Interval = 1
-    OnTimer = TmrProgressTimer
-    Left = 600
-    Top = 16
   end
 end

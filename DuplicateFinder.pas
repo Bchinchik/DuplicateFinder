@@ -12,9 +12,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, FileCtrl, CheckLst, ComCtrls, Masks, ExtCtrls,
+  Dialogs, StdCtrls, Buttons, CheckLst, ComCtrls, Masks, ExtCtrls,
   StrUtils, ThreadDuplicateFinderModul, ActnList, ToolWin, ActnMan, ActnCtrls,
-  ActnMenus, ImgList, XPStyleActnCtrls, Menus;
+  ActnMenus, ImgList, XPStyleActnCtrls, Menus, Vcl.FileCtrl, Vcl.Grids,
+  Vcl.Samples.Gauges ;
 
 type
   TMainForm = class(TForm)
@@ -31,8 +32,6 @@ type
     Label4: TLabel;
     stat1: TStatusBar;
     ChkBoxHeader: TCheckBox;
-    MmoDuplicateRezult: TMemo;
-    ProgressBar: TProgressBar;
     grp1:TGroupBox;
     BtnExit: TBitBtn;
     ChkLstBoxFindCriteria: TCheckListBox;
@@ -51,18 +50,8 @@ type
     MniSeparator2: TMenuItem;
     MniDuplicateSelectAll: TMenuItem;
     MniSeparator1: TMenuItem;
-    lbl1: TLabel;
-    ChkReadOnly: TCheckBox;
-    ChkHidden: TCheckBox;
-    ChkSystem: TCheckBox;
-    ChkArchive: TCheckBox;
-    TmrFileCounter: TTimer;
-    TmrPathScaning: TTimer;
-    TmrProgress: TTimer;
-    lbl2: TLabel;
-    lbl3: TLabel;
-    lbl4: TLabel;
-    lbl5: TLabel;
+    Sg1: TStringGrid;
+    GProgress: TGauge;
     procedure BtnStartFindClick(Sender: TObject);
     procedure BtnStopFindClick(Sender: TObject);
     procedure BtnPlayPauseClick(Sender: TObject);
@@ -82,18 +71,21 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure MniAboutClick(Sender: TObject);
     procedure MniDuplicateByDateClick(Sender: TObject);
-    procedure TmrFileCounterTimer(Sender: TObject);
-    procedure TmrPathScaningTimer(Sender: TObject);
-    procedure TmrProgressTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+
   private
     { Private declarations }
     FCurDir: string;
     FPictureGlyph: TBitmap;
     FindThread: ThreadFinder;
+    procedure ReceiverPathSent(Sender: TObject; AddLine: String);
     procedure ReceiverMemoSent(Sender: TObject; AddLine: String);
-    procedure ReceiverLabelCountSent(Sender: TObject; AddLine: String);
+    procedure ReceiverCountSent(Sender: TObject; AddLine: String);
+    procedure ReceiverMemoSentR(Sender: TObject; Rez: TFindRezult);
+    procedure ReceiverProgressSent(Sender: TObject; AddLine: String);
     procedure FMenuItmChkLstCheckUnchek(AObject: TMenuItem; BOject: TCheckListBox; CheckHeader: TCheckBox; NumItem: Integer);
     function  FGetFindCriteria: Integer;
+    //procedure ReceiverLabelCountSent(Sender: TObject; AddLine: String);
  public
     { Public declarations }
     property FindCriteria: Integer read FGetFindCriteria;
@@ -108,21 +100,39 @@ implementation
 {$R *.dfm}
 
 procedure TMainForm.BtnStartFindClick(Sender: TObject);
+  var
+    i: Integer;
 begin
-
-  MmoDuplicateRezult.Lines.Clear;
-  ProgressBar.Position := 0;
+  //Clear table
+  for i := 0 to sg1.ColCount-1 do
+    sg1.Cols[I].Clear;
+    Sg1.RowCount := 2;
+  // Generate header table
+  SG1.Cells[1, 0] := ' Name';
+  SG1.Cells[2, 0] := ' Size';
+  SG1.Cells[3, 0] := ' Date Time';
+  SG1.Cells[4, 0] := ' Path';
+  sg1.ColWidths[1] := 100;
+  sg1.ColWidths[2] := 100;
+  sg1.ColWidths[3] := 120;
+  sg1.ColWidths[4] := 1000;
+  //MmoDuplicateRezult.Lines.Clear;
+  //ProgressBar.Position := 0;
+  GProgress.Progress := 0;
   //ShowMessage(IntToStr(FindCriteria));
-  FindThread:=ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria,EdtFindMask.Text);
+  FindThread := ThreadFinder.Create(DirectoryListBox1.Directory,FindCriteria,EdtFindMask.Text);
   FindThread.OnTerminate := ThreadOnTerminate;
   FindThread.OnMemoSent :=  ReceiverMemoSent;
-  FindThread.OnLabelCountSent := ReceiverLabelCountSent;
-  FindThread.StartFlag := False;
+  FindThread.OnMemoSentR :=  ReceiverMemoSentR;
+  FindThread.OnProgressSent := ReceiverProgressSent;
+  FindThread.OnFileCountSent := ReceiverCountSent;
+  FindThread.OnPathScanSent := ReceiverPathSent;
+//  FindThread.StartFlag := False;
   //FindThread.AFCStopFlag := False;
   FindThread.Resume;
-  TmrFileCounter.Enabled := True;
-  TmrPathScaning.Enabled := True;
-  TmrProgress.Enabled := True;
+  //TmrFileCounter.Enabled := True;
+  //TmrPathScaning.Enabled := True;
+
   BtnStartFind.Enabled := False;
   BtnStopFind.Visible := True;
   BtnPlayPause.Visible := True;
@@ -138,13 +148,14 @@ end;
 procedure TMainForm.BtnStopFindClick(Sender: TObject);
 begin
   //FindThread.AFCStopFlag := True;
-  TmrFileCounter.Enabled := False;
-  TmrPathScaning.Enabled := False;
-  TmrProgress.Enabled := False;
+  //TmrFileCounter.Enabled := False;
+  //TmrPathScaning.Enabled := False;
+
   FindThread.Terminate;
 
-  MmoDuplicateRezult.Lines.Clear;
-  ProgressBar.Visible := False;
+  //MmoDuplicateRezult.Lines.Clear;
+  //ProgressBar.Visible := False;
+  GProgress.Visible := False;
   BtnStartFind.Enabled := True;
   BtnStopFind.Visible := False;
   BtnPlayPause.Visible := False;
@@ -212,6 +223,20 @@ begin
   CanClose := False;
 end;
 
+procedure TMainForm.FormCreate(Sender: TObject);
+
+begin
+  SG1.Cells[1, 0] := ' Name';
+  SG1.Cells[2, 0] := ' Size';
+  SG1.Cells[3, 0] := ' Date';
+  SG1.Cells[4, 0] := ' Path';
+  sg1.ColWidths[1] := 100;
+  sg1.ColWidths[2] := 100;
+  sg1.ColWidths[3] := 80;
+  sg1.ColWidths[4] := 600;
+
+end;
+
 procedure TMainForm.MniExitClick(Sender: TObject);
 begin
   BtnExit.Click;
@@ -269,14 +294,46 @@ begin
   BtnStopFind.Click;
 end;
 
-procedure TMainForm.ReceiverLabelCountSent(Sender: TObject; AddLine: String);
+procedure TMainForm.ReceiverCountSent(Sender: TObject; AddLine: String);
 begin
-  Stat1.Panels[1].Text :=AddLine;
+  Stat1.Panels[1].Text := AddLine;
 end;
 
 procedure TMainForm.ReceiverMemoSent(Sender: TObject; AddLine: String);
 begin
-   MmoDuplicateRezult.Lines.Add(AddLine);
+   //MmoDuplicateRezult.Lines.Add(AddLine);
+end;
+
+procedure TMainForm.ReceiverMemoSentR(Sender: TObject; Rez: TFindRezult);
+begin
+     //MmoDuplicateRezult.Lines.Add(Buf.AllString);
+  SG1.Cells[0, SG1.RowCount-1] := ' ' + IntToStr(SG1.RowCount-1) + '.';
+  SG1.Cells[1, SG1.RowCount-1] := Rez.FileName; //Writing file name
+  SG1.Cells[2, SG1.RowCount-1] := IntToStr(Rez.Size); //Writing file size
+  SG1.Cells[3, SG1.RowCount-1] := Rez.TimeMDateStr; //Writing file date modification
+  SG1.Cells[4, SG1.RowCount-1] := Rez.Path; //Writing file path
+  SG1.RowCount:=SG1.RowCount+1;
+end;
+
+procedure TMainForm.ReceiverPathSent(Sender: TObject; AddLine: String);
+begin
+  Stat1.Panels[0].Text := AddLine;
+end;
+
+procedure TMainForm.ReceiverProgressSent(Sender: TObject; AddLine: String);
+var
+x:Integer;
+begin
+  x := StrToInt(AddLine);
+
+  with GProgress do
+   begin
+     if not(Visible) then
+      Visible := True;
+     MaxValue := FindThread.ProgressMax;
+     Progress := x;
+   end;
+
 end;
 
 procedure TMainForm.MniPlayPauseClick(Sender: TObject);
@@ -359,13 +416,21 @@ end;
 
 function TMainForm.FGetFindCriteria: Integer;
 begin
+ //By name
  if ChkLstBoxFindCriteria.Checked[0] and (not(ChkLstBoxFindCriteria.Checked[1])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 1;
+ //By size
  if ChkLstBoxFindCriteria.Checked[1] and (not(ChkLstBoxFindCriteria.Checked[0])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 2;
+ //By datetime
  if ChkLstBoxFindCriteria.Checked[2] and (not(ChkLstBoxFindCriteria.Checked[0])) and (not(ChkLstBoxFindCriteria.Checked[1]))  then Result := 3;
+ //By name and size
  if ChkLstBoxFindCriteria.Checked[0] and ((ChkLstBoxFindCriteria.Checked[1])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 4;
+ //By name and datetime
  if ChkLstBoxFindCriteria.Checked[0] and (not(ChkLstBoxFindCriteria.Checked[1])) and ((ChkLstBoxFindCriteria.Checked[2]))  then Result := 5;
+ //By size and datetime
  if ChkLstBoxFindCriteria.Checked[1] and ((ChkLstBoxFindCriteria.Checked[2])) and (not(ChkLstBoxFindCriteria.Checked[0]))  then Result := 6;
+ //By name,size,datetime
  if ChkLstBoxFindCriteria.Checked[0] and ((ChkLstBoxFindCriteria.Checked[1])) and ((ChkLstBoxFindCriteria.Checked[2]))  then Result := 7;
+ //No find duplicate, just find files on mask
  if not(ChkLstBoxFindCriteria.Checked[0]) and (not(ChkLstBoxFindCriteria.Checked[1])) and (not(ChkLstBoxFindCriteria.Checked[2]))  then Result := 8;
 
 end;
@@ -375,60 +440,28 @@ end;
 procedure TMainForm.ThreadOnTerminate(Sender: TObject);
 begin
 
-  TmrFileCounter.Enabled := False;
-  TmrPathScaning.Enabled := False;
-  TmrProgress.Enabled := False;
-  FindThread := nil;
+ // TmrFileCounter.Enabled := False;
+  //TmrPathScaning.Enabled := False;
+
+  //FindThread := nil;
+  sg1.SetFocus;
   MainForm.stat1.Panels[2].Text := 'Завершен';
   MainForm.BtnStartFind.Enabled := True;
   MainForm.BtnStopFind.Visible := False;
   MainForm.BtnPlayPause.Visible := False;
   MainForm.MniStopFind.Enabled := False;
   MainForm.MniPlayPause.Enabled := False;
-  MainForm.ProgressBar.Visible := False;
+//  MainForm.ProgressBar.Visible := False;
+  GProgress.Visible := False;
 
-
-end;
-
-
-
-procedure TMainForm.TmrFileCounterTimer(Sender: TObject);
-begin
-  if (FindThread<>nil) then
-  //if (not(FindThread.AFCStopFlag)) then
-     Stat1.Panels[1].Text := IntToStr(FindThread.AllFileCounter)
-  else
-       Self.Enabled := False;
+  FindThread.Terminate;
 
 end;
 
-procedure TMainForm.TmrPathScaningTimer(Sender: TObject);
-begin
-  if (FindThread<>nil) then
-    Stat1.Panels[0].Text := FindThread.PathScaning
-  else
-       Self.Enabled := False;
-end;
 
-procedure TMainForm.TmrProgressTimer(Sender: TObject);
-begin
-  if (FindThread<>nil) then
-    with ProgressBar do
-  begin
-    if FindThread.StartFlag then
-       begin
-        if Visible = False then
-           Visible := True;
-           Position := FindThread.ProgressCur;
-           Max := FindThread.ProgressMax;
-           lbl2.Caption := IntToStr(FindThread.ProgressMax);
-           lbl3.Caption := IntToStr(FindThread.ProgressCur);
-           lbl4.Caption := (FindThread.a);
-           lbl5.Caption := (FindThread.b);
-       end;
-  end
-  else
-       Self.Enabled := False;
-end;
+
+
+
+
 
 end.
