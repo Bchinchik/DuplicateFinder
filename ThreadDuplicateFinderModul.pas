@@ -49,8 +49,8 @@ type
       ProgressCur: Integer;
       //StartFlag: Boolean;
       OnPathScanSent: TSentEvent;
-      OnMemoSent: TSentEvent;
-      OnMemoSentR: TSentEventR;
+      //OnMemoSent: TSentEvent;
+      OnGridSentR: TSentEventR;
       OnProgressSent: TSentEvent;
       OnFileCountSent: TSentEvent;
       constructor Create(StartFolder: string; FindCriteria: Integer; FindMask: string);
@@ -76,24 +76,22 @@ procedure ThreadFinder.GetDirFilesList;
     DirList: TStringList;
     I: Integer;
     ArrayLength: Integer;
-   // ch: string;
-begin
 
+begin
   DirList := TStringList.Create;
-  //Rez := TFindRezult.Create;
+
   if (FStartFolder[Length(FStartFolder)]) = '\' then
      Delete(FStartFolder,(Length(FStartFolder)),1);
-  //ShowMessage(FStartFolder[Length(FStartFolder)]);
   DirList.Add(FStartFolder);
   I := 0;
   ArrayLength := 1;
   FFileCounter := 0;
-  //DRCount := DirList.Count - 1;
+
  while I <= DirList.Count - 1 do
   begin
 
     try
-    if FindFirst(ExpandFileName(DirList[I] + '\*.*'),faAnyFile, SearchRec) = 0 then
+    if FindFirst(ExpandFileName(DirList[I] + '\*'),faAnyFile, SearchRec) = 0 then
       repeat
       if Self.Terminated then
         Break
@@ -110,25 +108,22 @@ begin
           FRez.FileName := SearchRec.Name;
           FRez.Size := SearchRec.Size;
           FRez.TimeM := SearchRec.Time;
-          FRez.Path := DirList[I] + '\' + SearchRec.Name;
-          FFileList.Add(FRez.FileName + ' | ID: ' + IntToStr(ArrayLength-1));
-          //FFileList.Add(SearchRec.Name + '   |   Путь:  ' +
-          //DirList[I] +  SearchRec.Name);
-         // FFileList.Add(Rez.AllString);
-          // Trying to fill dynamic array :)
+          FRez.Path := DirList[I]+ '\';
+          case FFindCriteria of
+             1,4,5,7:FFileList.Add(FRez.FileName + ' | ID: ' + IntToStr(ArrayLength-1));
+             2:FFileList.Add(IntToStr(FRez.Size) + ' | ID: ' + IntToStr(ArrayLength-1));
+             3:FFileList.Add(IntToStr(FRez.TimeM) + ' | ID: ' + IntToStr(ArrayLength-1));
+             6:FFileList.Add(IntToStr(FRez.Size) + ' | ID: ' + IntToStr(ArrayLength-1));
+          end;
+          //  dynamic array
           SetLength(FMass,ArrayLength);
           FMass[ArrayLength-1] := FRez;
-          //FMass[ArrayLength-1].FileName := Rez.FileName;
-         // FMass[ArrayLength-1].Size := Rez.Size;
-         // FMass[ArrayLength-1].TimeM := Rez.TimeM;
-         // FMass[ArrayLength-1].Path := Rez.Path;
           Inc(ArrayLength);
           Inc(FFileCounter);
           ShellSynchronize(OnFileCountSent,IntToStr(FFileCounter));
           ShellSynchronize(OnPathScanSent,DirList[I]);
-          //PathScaning := DirList[I];
           if FFindCriteria = 8 then
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
         end;
 
       end;
@@ -140,11 +135,7 @@ begin
   end;
 
   DirList.Free;
-  //Rez.Free;
-  //SortFMassByName;
-  //FFileList.Sort;
-  //MainForm.MmoDuplicateRezult.Lines.AddStrings(FFileList);
-  //ShowMessage('111');
+
 end;
 
 
@@ -162,7 +153,6 @@ begin
 
   FFileList := TStringList.Create;
   GetDirFilesList;
-
   GetDuplicateFiles;
   FFileList.Free;
 
@@ -176,8 +166,7 @@ procedure ThreadFinder.GetDuplicateFiles;
     I,k,n,ListCount, PosFirst, PosNext: Integer;
 
 begin
-  //if (FFindCriteria = 0) or Self.Terminated then
-  // Break;
+
   I := 0;
   FFileList.Sort;
   ListCount := FFileList.Count - 2;
@@ -198,10 +187,10 @@ begin
           if FMass[k].FileName = fmass[n].FileName then
           begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
            repeat
             FRez := FMass[n];
-            ShellSynchronize(OnMemoSentR,FRez);
+            ShellSynchronize(OnGridSentR,FRez);
             if i = ListCount then Break;
             Inc(I);
             ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -217,10 +206,10 @@ begin
            if FMass[k].Size = fmass[n].Size then
            begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
             repeat
              FRez := FMass[n];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
              if i = ListCount then Break;
              Inc(I);
              ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -236,10 +225,10 @@ begin
           if FMass[k].TimeM = fmass[n].TimeM then
            begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
             repeat
              FRez := FMass[n];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
              if i = ListCount then Break;
              Inc(I);
              ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -255,16 +244,16 @@ begin
           if (FMass[k].FileName = fmass[n].FileName)and(FMass[k].Size = fmass[n].Size) then
            begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
             repeat
              FRez := FMass[n];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
              if i = ListCount then Break;
              Inc(I);
              ShellSynchronize(OnProgressSent,IntToStr(I));
              PosNext := AnsiPos(Sub,FFileList[I + 1]);
              n := StrToInt(Copy(FFileList[I+1],PosNext+5,Length(FFileList[I+1])-PosNext+5));
-            until (FMass[k].FileName <> fmass[n].FileName)and(FMass[k].Size <> fmass[n].Size);
+            until (FMass[k].FileName <> fmass[n].FileName)or(FMass[k].Size <> fmass[n].Size);
            end;
           Inc(I);
           ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -274,16 +263,16 @@ begin
           if (FMass[k].FileName = fmass[n].FileName)and(FMass[k].TimeM = fmass[n].TimeM) then
            begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
             repeat
              FRez := FMass[n];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
              if i = ListCount then Break;
              Inc(I);
              ShellSynchronize(OnProgressSent,IntToStr(I));
              PosNext := AnsiPos(Sub,FFileList[I + 1]);
              n := StrToInt(Copy(FFileList[I+1],PosNext+5,Length(FFileList[I+1])-PosNext+5));
-            until (FMass[k].FileName <> fmass[n].FileName)and(FMass[k].TimeM <> fmass[n].TimeM);
+            until (FMass[k].FileName <> fmass[n].FileName)or(FMass[k].TimeM <> fmass[n].TimeM);
            end;
           Inc(I);
           ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -293,16 +282,16 @@ begin
            if (FMass[k].TimeM = fmass[n].TimeM)and(FMass[k].Size = fmass[n].Size) then
            begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
             repeat
              FRez := FMass[n];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
              if i = ListCount then Break;
              Inc(I);
              ShellSynchronize(OnProgressSent,IntToStr(I));
              PosNext := AnsiPos(Sub,FFileList[I + 1]);
              n := StrToInt(Copy(FFileList[I+1],PosNext+5,Length(FFileList[I+1])-PosNext+5));
-            until (FMass[k].TimeM <> fmass[n].TimeM)and(FMass[k].Size <> fmass[n].Size);
+            until (FMass[k].TimeM <> fmass[n].TimeM)or(FMass[k].Size <> fmass[n].Size);
            end;
           Inc(I);
           ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -312,90 +301,23 @@ begin
             if (((FMass[k].FileName = fmass[n].FileName)and(FMass[k].Size = fmass[n].Size))and(FMass[k].TimeM = fmass[n].TimeM)) then
            begin
              FRez := FMass[k];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
             repeat
              FRez := FMass[n];
-             ShellSynchronize(OnMemoSentR,FRez);
+             ShellSynchronize(OnGridSentR,FRez);
              if i = ListCount then Break;
              Inc(I);
              ShellSynchronize(OnProgressSent,IntToStr(I));
              PosNext := AnsiPos(Sub,FFileList[I + 1]);
              n := StrToInt(Copy(FFileList[I+1],PosNext+5,Length(FFileList[I+1])-PosNext+5));
-            until (((FMass[k].FileName <> fmass[n].FileName)or(FMass[k].Size <> fmass[n].Size))or(FMass[k].TimeM <> fmass[n].TimeM));
+            until (FMass[k].FileName <> fmass[n].FileName)or(FMass[k].Size <> fmass[n].Size)or(FMass[k].TimeM <> fmass[n].TimeM);
            end;
           Inc(I);
           ShellSynchronize(OnProgressSent,IntToStr(I));
           end;
    end;
-
-
-
-
-
   end;
-{if FFindCriteria = 1 then
-  begin
-    FDuplIter := 0;
-    J := 1;
-    ProgressMax := FFileList.Count - 1;
 
-    while FDuplIter < FFileList.Count - 1 do
-    if Self.Terminated then
-      Break
-    else
-    begin
-      SubStrPosFirst := AnsiPos(SubStr,FFileList[FDuplIter]);
-      SubStrPosNext := AnsiPos(SubStr,FFileList[FDuplIter + 1]);
-      CmprStrFist := Copy(FFileList[FDuplIter],1,SubStrPosFirst - 1);
-      CmprStrNext := Copy(FFileList[FDuplIter + 1],1,SubStrPosNext - 1);
-      //First string = Next string = Duplicate
-      if AnsiCompareText(CmprStrFist,CmprStrNext) = 0 then
-      begin
-        FBufStrMemoAdd := FFileList[FDuplIter];
-        ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-
-        FBufStrMemoAdd := FFileList[FDuplIter + 1];
-        ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-
-        J := FDuplIter + 2;
-        CmprStrFist := Copy(FFileList[FDuplIter],1,SubStrPosFirst - 1);
-        CmprStrNext := Copy(FFileList[J],1,SubStrPosNext - 1);
-        while AnsiCompareText(CmprStrFist,CmprStrNext) = 0 do
-        //Matches more than one
-        begin
-          FBufStrMemoAdd := FFileList[J];
-          ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-          Inc( J );
-          ProgressCur := J;
-          CmprStrFist := Copy(FFileList[FDuplIter],1,SubStrPosFirst - 1);
-          CmprStrNext := Copy(FFileList[J],1,SubStrPosNext - 1);
-        end;
-          FBufStrMemoAdd := '____________________________________________________________________________________________________';
-          ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-
-          ShellSynchronize(OnProgressSent,IntToStr(FDuplIter));
-      end
-      else
-          ShellSynchronize(OnProgressSent,IntToStr(FDuplIter));
-
-        if FDuplIter < J then
-           FDuplIter := J
-        else
-          begin
-           Inc( FDuplIter );
-
-           //Inc(ProgressCur);
-           //b:=IntToStr(FDuplIter);
-          end;
-    end;
-  end
-  else
-  begin
-    FBufStrMemoAdd := 'Поиск Файлов по шаблону завершен.';
-    ShellSynchronize(OnMemoSent,FBufStrMemoAdd);
-
-  end;
- // AFCStopFlag := True;}
  end;
 
 
@@ -432,8 +354,6 @@ begin
          FMass[j].TimeM := s3;
          FMass[j].Path := s4;
         end;
-
-
 
 end;
 

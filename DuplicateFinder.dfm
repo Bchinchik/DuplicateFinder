@@ -206,13 +206,13 @@ object MainForm: TMainForm
   end
   object Label2: TLabel
     Left = 8
-    Top = 309
-    Width = 159
-    Height = 20
+    Top = 314
+    Width = 138
+    Height = 16
     Caption = #1052#1072#1089#1082#1072' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072':'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -16
+    Font.Height = -15
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
@@ -252,6 +252,36 @@ object MainForm: TMainForm
     ForeColor = clMoneyGreen
     ParentColor = False
     Progress = 0
+    Visible = False
+  end
+  object lbl1: TLabel
+    Left = 359
+    Top = 317
+    Width = 231
+    Height = 16
+    Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072#1081#1076#1077#1085#1085#1099#1093' '#1076#1091#1073#1083#1080#1082#1072#1090#1086#1074':'
+    Color = clBtnFace
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Visible = False
+  end
+  object lbl2: TLabel
+    Left = 588
+    Top = 315
+    Width = 64
+    Height = 20
+    Caption = '0'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
     Visible = False
   end
   object BtnStartFind: TBitBtn
@@ -559,13 +589,12 @@ object MainForm: TMainForm
         Width = 80
       end>
     ParentDoubleBuffered = False
-    ExplicitTop = 691
   end
   object grp1: TGroupBox
-    Left = 357
-    Top = 58
+    Left = 359
+    Top = 62
     Width = 293
-    Height = 237
+    Height = 233
     TabOrder = 8
     object ChkBoxHeader: TCheckBox
       Left = 8
