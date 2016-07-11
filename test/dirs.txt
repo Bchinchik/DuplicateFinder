@@ -1,0 +1,5 @@
+E:\DuplicateFinder\test
+E:\DuplicateFinder\test\1
+E:\DuplicateFinder\test\2
+E:\DuplicateFinder\test\4
+E:\DuplicateFinder\test\4\44

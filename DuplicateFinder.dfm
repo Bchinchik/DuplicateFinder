@@ -191,7 +191,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object LFindFiles: TLabel
     Left = 8
     Top = 0
     Width = 152
@@ -204,10 +204,10 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
   end
-  object Label2: TLabel
+  object LFindMask: TLabel
     Left = 8
     Top = 314
-    Width = 138
+    Width = 137
     Height = 16
     Caption = #1052#1072#1089#1082#1072' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072':'
     Font.Charset = DEFAULT_CHARSET
@@ -217,7 +217,7 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object Label3: TLabel
+  object LPath: TLabel
     Left = 8
     Top = 30
     Width = 48
@@ -230,7 +230,7 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
   end
-  object Label4: TLabel
+  object LStartFolder: TLabel
     Left = 8
     Top = 390
     Width = 88
@@ -254,7 +254,7 @@ object MainForm: TMainForm
     Progress = 0
     Visible = False
   end
-  object lbl1: TLabel
+  object LCountLabel: TLabel
     Left = 359
     Top = 317
     Width = 231
@@ -270,10 +270,10 @@ object MainForm: TMainForm
     ParentFont = False
     Visible = False
   end
-  object lbl2: TLabel
+  object LCount: TLabel
     Left = 588
     Top = 315
-    Width = 64
+    Width = 11
     Height = 20
     Caption = '0'
     Font.Charset = DEFAULT_CHARSET
@@ -569,7 +569,7 @@ object MainForm: TMainForm
     DirList = DirectoryListBox1
     TabOrder = 6
   end
-  object stat1: TStatusBar
+  object StsBarProgress: TStatusBar
     Left = 0
     Top = 642
     Width = 702
@@ -748,7 +748,7 @@ object MainForm: TMainForm
     ParentFont = False
     TabOrder = 10
   end
-  object Sg1: TStringGrid
+  object StrGrdRez: TStringGrid
     Left = 8
     Top = 414
     Width = 642
