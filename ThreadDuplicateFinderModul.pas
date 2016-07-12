@@ -94,7 +94,7 @@ begin
         Break
       else
       if ((SearchRec.Attr and faDirectory) <> 0)and
-       (SearchRec.Name <> '.')and (SearchRec.Name <> '..') then
+       (SearchRec.Name <> '.') and (SearchRec.Name <> '..') then
         DirList.Add(DirList[I] + '\' + SearchRec.Name)
       else
       if SearchRec.Name[1] <> '.' then
@@ -122,14 +122,13 @@ begin
              ShellSynchronize(OnGridSentR,FRez);
         end;
 
-
       until FindNext(SearchRec) <> 0;
     finally
       FindClose(SearchRec);
       Inc( I );
     end;
   end;
-  //ShowMessage(IntToStr(DirList.Count));
+
   DirList.Free;
 end;
 
@@ -175,7 +174,7 @@ begin
    case FFindCriteria of
      8: Break;
      1: begin
-          if AnsiLowerCase(FMass[K].FileName) = AnsiLowerCase(FMass[N].FileName) then
+          if AnsiCompareText(FMass[K].FileName,FMass[N].FileName) = 0 then
           begin
              FRez := FMass[K];
              ShellSynchronize(OnGridSentR,FRez);
@@ -187,7 +186,7 @@ begin
             ShellSynchronize(OnProgressSent,IntToStr(I));
             PosNext := AnsiPos(Sub,FFileList[I + 1]);
             N := StrToInt(Copy(FFileList[I+1],PosNext+5,Length(FFileList[I+1])-PosNext+5));
-           until AnsiLowerCase(FMass[K].FileName) <> AnsiLowerCase(FMass[N].FileName);
+           until AnsiCompareText(FMass[K].FileName,FMass[N].FileName) <> 0;
           end;
           Inc(I);
           ShellSynchronize(OnProgressSent,IntToStr(I));
@@ -270,7 +269,7 @@ begin
         end;
 
        6:begin
-           if (FMass[K].TimeM = FMass[N].TimeM)and(FMass[K].Size = FMass[N].Size) then
+           if (FMass[K].TimeM = FMass[N].TimeM)AND(FMass[K].Size = FMass[N].Size) then
            begin
              FRez := FMass[K];
              ShellSynchronize(OnGridSentR,FRez);

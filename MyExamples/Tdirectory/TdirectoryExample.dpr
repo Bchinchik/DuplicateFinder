@@ -28,14 +28,14 @@ begin
     // Reset(f);
     // Assign(CompareFile,'rez.txt');
     // Rewrite(CompareFile);
-    // Assign(F2,'files.txt');
-    // Rewrite(F2);
+     Assign(F2,'files.txt');
+     Rewrite(F2);
     // for I := Low(Dirs) to High(Dirs) do
        begin
       //  Writeln(f,Dirs[I]);
-        //Files := TDirectory.GetFiles('d:\disk d\','*',TSearchOption(1));
-         // for J := Low(Files) to High(Files) do
-           //Writeln(f2,Files[J]);
+        Files := TDirectory.GetFiles('e:\','*',TSearchOption(1));
+          for J := Low(Files) to High(Files) do
+           Writeln(f2,Files[J]);
            begin
 
            end;
